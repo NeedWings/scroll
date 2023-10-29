@@ -1,0 +1,7 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  USDC balance 0 or less MINIMAL_SWAP_AMOUNTS. skip
+[INFO] [1/1]  going to swap 3.062365 USDT for ETH in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0x4ad5371f612c1626b789267b3e49cd142383d3dc66ac0d21bc8f1cda0047b17d
+[SUCCESS] [1/1]  0x4ad5371f612c1626b789267b3e49cd142383d3dc66ac0d21bc8f1cda0047b17d is completed
+[INFO] [1/1]  sleeping 1 s
+

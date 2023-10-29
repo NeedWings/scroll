@@ -1,0 +1,26 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  ETH balance: 0.003547723151378952
+[INFO] [1/1]  USDT balance: 3.062365
+[INFO] [1/1]  USDC balance: 6.421044
+[INFO] [1/1]  going to swap 0.10380395257404125 USDC for ETH in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0xe420e382cba06fd30a4546abb08f8d0705660adf8e4ca910c8531ad14226cb59
+[SUCCESS] [1/1]  0xe420e382cba06fd30a4546abb08f8d0705660adf8e4ca910c8531ad14226cb59 is completed
+[INFO] [1/1]  sleeping 1 s
+[INFO] [1/1]  ETH balance: 0.003176827161169917
+[INFO] [1/1]  USDT balance: 3.062365
+[INFO] [1/1]  USDC balance: 6.317241
+[INFO] [1/1]  going to swap 0.1118479388947186 USDC for ETH in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0xdf1a2a5c17f23a05c1375bb6cca1c78fae5eb45505cf04f255ad1a97af27660f
+[SUCCESS] [1/1]  0xdf1a2a5c17f23a05c1375bb6cca1c78fae5eb45505cf04f255ad1a97af27660f is completed
+[INFO] [1/1]  sleeping 2 s
+[INFO] [1/2]  going to swap 6.205394 USDC for ETH in SyncSwap
+[SUCCESS] [1/2]  sending txn: 0x672e7c04fa04e2522ac7bf3af7cf5661441f18b49bc6c192b8d12f99960036a9
+[SUCCESS] [1/2]  0x672e7c04fa04e2522ac7bf3af7cf5661441f18b49bc6c192b8d12f99960036a9 is completed
+[INFO] [1/2]  sleeping 1 s
+[INFO] [1/2]  going to swap 3.062365 USDT for ETH in SyncSwap
+[ERROR] [1/2]  got error: 
+Could not identify the intended function with name `swapWithPermit`, positional arguments with type(s) `(dict),int,int,((address,int,int,int,bytes,bytes))` and keyword arguments with type(s) `{}`.
+Found 1 function(s) with the name `swapWithPermit`: ['swapWithPermit(((address,bytes,address,bytes)[],address,uint256)[],uint256,uint256,(address,uint256,uint256,uint8,bytes32,bytes32))']
+Function invocation failed due to no matching argument types.
+[INFO] [1/2]  sleeping 2 s
+

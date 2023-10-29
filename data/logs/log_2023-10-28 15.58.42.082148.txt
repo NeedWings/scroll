@@ -1,0 +1,10 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  going to send message
+[SUCCESS] [1/1]  sending txn: 0xa31a9968786faa68dc750f990e88f359bef3ef57edf7143953670efe445ed2bc
+[SUCCESS] [1/1]  0xa31a9968786faa68dc750f990e88f359bef3ef57edf7143953670efe445ed2bc is completed
+[INFO] [1/1]  sleeping 1 s
+[INFO] [1/1]  going to send message
+[SUCCESS] [1/1]  sending txn: 0x92969a403dc7f976ad11f04d9d5b72b18f4edb42f6da560c72ac8eb6ce385c19
+[SUCCESS] [1/1]  0x92969a403dc7f976ad11f04d9d5b72b18f4edb42f6da560c72ac8eb6ce385c19 is completed
+[INFO] [1/1]  sleeping 2 s
+

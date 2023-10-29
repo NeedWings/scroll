@@ -1,0 +1,9 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  USDC balance 0 or less MINIMAL_SWAP_AMOUNTS. skip
+[INFO] [1/1]  going to swap 3.062365 USDT for ETH in SyncSwap
+[ERROR] [1/1]  got error: 
+Could not identify the intended function with name `swapWithPermit`, positional arguments with type(s) `(dict),int,int,(dict)` and keyword arguments with type(s) `{}`.
+Found 1 function(s) with the name `swapWithPermit`: ['swapWithPermit(((address,bytes,address,bytes)[],address,uint256)[],uint256,uint256,(address,uint256,uint256,uint8,bytes32,bytes32))']
+Function invocation failed due to no matching argument types.
+[INFO] [1/1]  sleeping 2 s
+

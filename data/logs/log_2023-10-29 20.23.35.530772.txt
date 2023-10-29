@@ -1,0 +1,6 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  going to swap 3.062365 USDT for ETH in SyncSwap
+[ERROR] [1/1]  got error: argument of type 'swapWithPermit' is not iterable
+[INFO] [1/1]  sleeping 2 s
+[INFO] [1/1]  USDC balance 0 or less MINIMAL_SWAP_AMOUNTS. skip
+

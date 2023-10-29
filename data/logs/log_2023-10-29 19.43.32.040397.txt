@@ -1,0 +1,14 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  ETH balance: 0.007622222149260066
+[INFO] [1/1]  USDT balance: 2.777086
+[INFO] [1/1]  USDC balance: 4.511395
+[INFO] [1/1]  going to swap 0.00010956905988731847 ETH for USDC in SyncSwap
+[ERROR] [1/1]  got erroor: 0x7939f424
+[INFO] [1/1]  sleeping 1 s
+[INFO] [1/1]  ETH balance: 0.007622222149260066
+[INFO] [1/1]  USDT balance: 2.777086
+[INFO] [1/1]  USDC balance: 4.511395
+[INFO] [1/1]  going to swap 0.00011255313307486121 ETH for USDC in SyncSwap
+[ERROR] [1/1]  got erroor: 0x7939f424
+[INFO] [1/1]  sleeping 1 s
+

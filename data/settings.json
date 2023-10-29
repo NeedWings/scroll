@@ -1,0 +1,100 @@
+{
+    
+    "===============  RPC  ===============": "",
+        "RPC": {
+            "ethereum"  : ["https://rpc.ankr.com/eth"],
+            "bsc"       : ["https://bsc-dataseed4.binance.org"],
+            "polygon"   : ["https://rpc.ankr.com/polygon"],
+            "arbitrum"  : ["https://rpc.ankr.com/arbitrum"],
+            "avalanche" : ["https://rpc.ankr.com/avalanche"],
+            "optimism"  : ["https://rpc.ankr.com/optimism"],
+            "scroll"    : ["https://rpc.scroll.io"]
+        },
+     
+    "===== Download Settings =====":"",
+        "LoaderDisk"  : "E:",
+        "DecryptType" : "Password", 
+    
+    "===== SOFT MODE ===== ": "",
+        "own_tasks": [1, 2, 3, [4, 5], 6],
+
+        "TaskSleep": [1, 2], // delay between tasks
+        "ErrorSleepeng" : [1, 2], // delay if an error occurs
+        "ThreadRunnerSleep" : [1, 2], // delay between two accounts starts work
+        "ApproveSleep"  : [10, 20],
+        "Slippage": 0.05, // slippage 0.02 = 2%
+        "SwapAtTheEnd" : [true], // Swap or no to chosen token in toSaveFunds at the end
+        "toSaveFunds" : ["ETH"], // To which token soft will swap after full module
+        "SaveEthOnBalance" : [0.004, 0.004], // How many eth soft will save if SwapAtTheEnd true and toSaveFunds not ETH
+
+        "delayed_start" : false,
+        "delayed_start_time": 3,
+    
+
+        "dmail_messages_amount": [1, 2],
+
+
+
+    "======== BRIDGE =========": "",
+        "MinEthValue"                 : 0.01, // minimal value of eth to be on wallet
+        "SaveOnWallet"                : [0.004, 0.007], // how many eth save on wallet
+        "USDAmountToBridge"           : [20, 20], // amount in usd to bridge
+        "nets_for_deposit"            : ["arbitrum", "ethereum"],
+        "bridge_type"                 : ["orbiter"],
+
+    
+    "======== WITHDRAW  =========": "",
+        "WithdrawSaving"              : [0.001, 0.002], // how many eth save on starknet wallet
+        "EtherToWithdraw"             : [0.5, 0.8], // how many eth to withdraw
+        "DistNet"                     : "arbitrum", 
+
+
+    "====== PARSER ======": "",
+        "ParsingSleep" : 71, // delay between parsing ballance for bridge to starknet
+        "minUSDamount" : 30, // minimal usd value for module 9
+        
+
+    "====== SWAPS =====": "",
+        "swapAmounts"               : [2, 3], // amount of swaps
+        "SwapDEXs"                  : [ "SyncSwap"], // DEX where will be swaps
+        "WorkPercent"               : [0.01, 0.02], // percent of balance to swap (0.5 = 50%)
+        "Supported_tokens"          : ["ETH", "USDC", "USDT"], // tokens for swap
+        "MINIMAL_SWAP_AMOUNTS": { 
+            "USDC": 0, // minimal amount to swap for every token
+            "USDT": 0
+        },
+
+
+
+    "===== LIQUIDITY =====": "",
+        "LiqWorkPercent"          : [0.01, 0.02], // percent of balance to add liquidity (0.5 = 50%)
+        "LiqDEXs"                 : ["SpaceFi"], // DEX where will be added liquidity
+        "RemoveOnFullMode"        : [true, true], // remove liquidity from DEXes on the end of FULL module
+        "AddLiqAmount"            : [2, 3], // how many times add liquidity
+
+    
+    "======= MAX GWEI =======": "",
+        "GWEI": {
+            "arbitrum"  : 0.25,
+            "avalanche" : 50,
+            "polygon"   : 700,
+            "ethereum"  : 27,
+            "bsc"       : 10,
+            "optimism"  : 0.3,
+            "scroll"    : 10
+        },
+
+    "======= Max L0 Fees Settings =======": "",
+        "FEES": {
+            "bsc"       : 0.005,
+            "polygon"   : 1.3,
+            "arbitrum"  : 0.00095,
+            "avalanche" : 0.11,
+            "optimism"  : 0.007,
+            "ethereum"  : 0.00095
+        },
+
+
+    "========= END =========": ""
+    
+}

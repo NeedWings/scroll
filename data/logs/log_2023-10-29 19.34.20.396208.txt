@@ -1,0 +1,17 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  ETH balance: 0.007932080719627468
+[INFO] [1/1]  USDT balance: 2.777086
+[INFO] [1/1]  USDC balance: 4.330011
+[INFO] [1/1]  going to swap 9.518258811643807e-05 ETH for USDT in SpaceFi
+[ERROR] [1/1]  got erroor: 
+Could not identify the intended function with name `swapExactETHForTokens`, positional arguments with type(s) `int,((address,address,bool)),address,int` and keyword arguments with type(s) `{}`.
+Found 1 function(s) with the name `swapExactETHForTokens`: ['swapExactETHForTokens(uint256,address[],address,uint256)']
+Function invocation failed due to no matching argument types.
+[INFO] [1/1]  sleeping 2 s
+[INFO] [1/1]  ETH balance: 0.007932080719627468
+[INFO] [1/1]  USDT balance: 2.777086
+[INFO] [1/1]  USDC balance: 4.330011
+[INFO] [1/1]  going to swap 8.330181348706111e-05 ETH for USDT in SyncSwap
+[ERROR] [1/1]  got erroor: 0x7939f424
+[INFO] [1/1]  sleeping 1 s
+

@@ -1,0 +1,23 @@
+0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c:
+[INFO] [1/1]  ETH balance: 0.006178372679839176
+[INFO] [1/1]  USDT balance: 2.777086
+[INFO] [1/1]  USDC balance: 6.290094
+[INFO] [1/1]  going to swap 8.353256482816575e-05 ETH for USDT in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0x306fa1c46d09abb6efa6b9b923e007e0b35193641ab7e9d61184c70134c12be0
+[SUCCESS] [1/1]  0x306fa1c46d09abb6efa6b9b923e007e0b35193641ab7e9d61184c70134c12be0 is completed
+[INFO] [1/1]  sleeping 1 s
+[INFO] [1/1]  ETH balance: 0.005508517508333488
+[INFO] [1/1]  USDT balance: 2.925733
+[INFO] [1/1]  USDC balance: 6.290094
+[INFO] [1/1]  going to swap 7.67822427496136e-05 ETH for USDT in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0xa2866fd6dfb089f8330f19ad13876cd57d4174ff704cc696229eaadae50aed10
+[SUCCESS] [1/1]  0xa2866fd6dfb089f8330f19ad13876cd57d4174ff704cc696229eaadae50aed10 is completed
+[INFO] [1/1]  sleeping 1 s
+[INFO] [1/1]  ETH balance: 0.00484619983127286
+[INFO] [1/1]  USDT balance: 3.062365
+[INFO] [1/1]  USDC balance: 6.290094
+[INFO] [1/1]  going to swap 7.354328023316683e-05 ETH for USDC in SyncSwap
+[SUCCESS] [1/1]  sending txn: 0xd4fcc5296e85e5472182d81b4e260e63a67c381b685be9903311b9131ecdfa19
+[SUCCESS] [1/1]  0xd4fcc5296e85e5472182d81b4e260e63a67c381b685be9903311b9131ecdfa19 is completed
+[INFO] [1/1]  sleeping 1 s
+
