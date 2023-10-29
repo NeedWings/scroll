@@ -1,4 +1,5 @@
 from BaseClasses import *
+import subprocess
 def decrypt(filename):
     f = Fernet(KEY)
     with open(filename, 'rb') as file:
@@ -6,11 +7,12 @@ def decrypt(filename):
     decrypted_data = f.decrypt(encrypted_data).decode()
     return decrypted_data.split(':')
 
+
 server_data = decrypt(f"{SETTINGS_PATH}server_data.txt")
 connect_data = (server_data[0], int(server_data[1]))
 
 def check_license_elig(sha):
-    console_log.info("Checking license expiration date...")
+    logger.info("Checking license expiration date...")
     try:
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         client.connect(connect_data)
@@ -24,41 +26,77 @@ def check_license_elig(sha):
         if response == "True":
             return True
         else:
-            console_log.error(f'Cant auth your device/subs')
+            logger.error(f'Cant auth your device/subs')
             input("Press any key to exit")
             exit()
     except Exception as error:
-        console_log.error(f'SEnd this message to dev: {error}')
+        logger.error(f'SEnd this message to dev: {error}')
         input("Press any key to exit")
         exit()
 
+def hash_string(input_string: str) -> str:
+    # Создание объекта sha256
+    sha256 = hashlib.sha256()
+
+    # Передача байтовой строки в функцию хеширования
+    sha256.update(input_string.encode('utf-8'))
+
+    # Получение и возврат хеша в шестнадцатеричном формате
+    return sha256.hexdigest()
+
+
+def get_serial_number():
+    try:
+        # Запуск shell-команды для получения серийного номера
+        serial_number = subprocess.check_output("system_profiler SPHardwareDataType | awk '/Serial/ {print $4}'", shell=True).strip().decode("utf-8")
+        return serial_number
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+def get_disk_uuid():
+    try:
+        # Запуск shell-команды для получения UUID диска
+        disk_uuid = subprocess.check_output("diskutil info / | awk '/Volume UUID/ {print $3}'", shell=True).strip().decode("utf-8")
+        return disk_uuid
+    except Exception as e:
+        print(f"An error occurred while getting disk UUID: {e}")
+        return None
+
+def get_cpu_info():
+    try:
+        # Запуск shell-команды для получения информации о CPU
+        cpu_info = subprocess.check_output("sysctl -n machdep.cpu.brand_string", shell=True).strip().decode("utf-8")
+        return cpu_info
+    except Exception as e:
+        print(f"An error occurred while getting CPU information: {e}")
+        return None
+
+def get_user_key():
+    values = [
+        get_cpu_info(), get_disk_uuid(), get_serial_number()
+    ]
+    if None in values:
+        input("Cant generate api key, pls contact with support")
+        return
+    
+    user_key = "mac_" + hash_string(''.join(i for i in values))
+    return user_key
+
 def checking_license():
-    text = wmi.WMI().Win32_ComputerSystemProduct()[0].UUID + ':SOFT'
-    sha = hashlib.sha1(text.encode()).hexdigest()
-    return check_license_elig(sha)
+    return check_license_elig(get_user_key())
 
 if __name__ == "__main__":
     pass
     checking_license()
 
-def get_disks():
-    c = wmi.WMI()
-    logical_disks = {}
-    for drive in c.Win32_DiskDrive():
-        for partition in drive.associators("Win32_DiskDriveToDiskPartition"):
-            for disk in partition.associators("Win32_LogicalDiskToPartition"):
-                logical_disks[disk.Caption] = {"model":drive.Model, "serial":drive.SerialNumber}
-    return logical_disks
+
 
 def decode_secrets():
     console_log.info("Decrypting your secret keys..")
-    logical_disks = get_disks()
     decrypt_type = SETTINGS["DecryptType"].lower()
     disk = SETTINGS["LoaderDisk"]
-    if decrypt_type == "flash":
-        disk_data = logical_disks[disk]
-        data_to_be_encoded = disk_data["model"] + '_' + disk_data["serial"]
-    elif decrypt_type == "password":
+    if decrypt_type == "password":
         data_to_be_encoded = getpass.getpass('[DECRYPTOR] Write here password to decrypt secret keys: ')
     key = hashlib.sha256(data_to_be_encoded.encode()).hexdigest()[:43] + "="
     f = Fernet(key)
@@ -91,7 +129,6 @@ def transform_keys(private_keys, addresses):
     return accounts, counter
 
 def encode_secrets():
-    logical_disks = get_disks()
     while True:
         try:
             with open(SETTINGS_PATH + 'to_encrypted_secrets.txt', encoding='utf-8') as file:
@@ -114,25 +151,9 @@ def encode_secrets():
     
     with open(SETTINGS_PATH + "data.txt", 'w') as file:
         json.dump(json_wallets, file)
-    
-    if SETTINGS["DecryptType"].lower() == 'flash':
-        while True:
-            answer = input(
-                "Write here disk name, like: 'D'\n" + \
-                ''.join(f"Disk name: {i.replace(':', '')} - {logical_disks[i]}\n" for i in logical_disks.keys())
-            )
-            agree = input(
-                f"OK, your disk with name: {answer} | Data: {logical_disks[answer + ':']}\n" + \
-                "Are you agree to encode data.txt using this data? [Y/N]: "
-            )
-            if agree.upper().replace(" ", "") == "Y":
-                break
 
-        data = logical_disks[answer + ":"]
-        data_to_encoded = data["model"] + '_' + data["serial"]
-        key = hashlib.sha256(data_to_encoded.encode()).hexdigest()[:43] + "="
 
-    elif SETTINGS["DecryptType"].lower() == 'password':
+    if SETTINGS["DecryptType"].lower() == 'password':
         while True:
             data_to_be_encoded = getpass.getpass('Write here password to encrypt secret keys: ')
             agree = input(
