@@ -2,7 +2,9 @@ try:
     from MainRouter import *
     from do_not_touch import *
     
-
+    if __name__ == "__main__":
+        pass
+        checking_license()
     def get_action() -> str:
         theme = {
             "Question": {
