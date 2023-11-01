@@ -1,10 +1,10 @@
 try:
     from MainRouter import *
     from do_not_touch import *
+    
     if __name__ == "__main__":
         pass
         checking_license()
-
     def get_action() -> str:
         theme = {
             "Question": {
@@ -98,7 +98,7 @@ try:
             for account in accounts:
                 tasks.append(Thread(target = MainRouter(account, delay, task_number).start))
                 delay += get_random_value_int(SETTINGS["ThreadRunnerSleep"])
-            
+            shuffle(tasks)
             for i in tasks:
                 i.start()
 
