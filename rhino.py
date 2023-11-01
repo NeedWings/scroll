@@ -314,6 +314,16 @@ class Rhino:
         w3 = Web3(Web3.HTTPProvider(RPC_LSIT["scroll"]))
         signed_enable = w3.eth.account.sign_message(encoded_enable_msg, private_key = self.account.private_key)
         data = hex(signed_enable.r) + hex(signed_enable.s)[2::] + hex(signed_enable.v)[2::]
+        r = hex(signed_enable.r)
+        if len(r)%2 != 0:
+            r = "0x0"+r[2::]
+        s = hex(signed_enable.s)
+        if len(s)%2 != 0:
+            s = "0x0"+s[2::]
+        v = hex(signed_enable.v)
+        if len(v)%2 != 0:
+            v = "0x0"+v[2::]
+        data = r + s[2::] + v[2::]
         #data = "0x14f6ccb3f2ce5f67d0e85bc92c4b8bee464b39fa275e388de7e75df7e8205aab7b600ee52f56ccfba1b1b79e9ca83b15834820926c9a0519b96f8c8c8448b8b41b"
         k = kkeccak.new(digest_bits=256)
         k.update(data.encode())
@@ -391,6 +401,16 @@ class Rhino:
         signed_auth = w3.eth.account.sign_message(encoded_auth_msg, private_key = self.account.private_key)
         authNonce = f"v3-{ts}"
         signature = hex(signed_auth.r) + hex(signed_auth.s)[2::] + hex(signed_auth.v)[2::]
+        r = hex(signed_auth.r)
+        if len(r)%2 != 0:
+            r = "0x0"+r[2::]
+        s = hex(signed_auth.s)
+        if len(s)%2 != 0:
+            s = "0x0"+s[2::]
+        v = hex(signed_auth.v)
+        if len(v)%2 != 0:
+            v = "0x0"+v[2::]
+        signature = r + s[2::] + v[2::]
         return authNonce, signature
 
     def get_user_data(self, auth):
