@@ -1,7 +1,7 @@
 from BaseClasses import *
 from token_stor import *
 from DEXes.sushiswap import SushiSwap
-
+from rhino import *
 
 
 
@@ -241,9 +241,22 @@ class Bridger:
             self.account.send_txn([txn], net_name)
         return buff()
 
+    def rhino_bridge(self, net_name, amount):
+        @handle_error(account=self.account)
+        def buff():
+            rhino = Rhino(self.account)
+            min_amount, max_amount, fee = 0.001, self.account.get_balance(chain_natives[net_name])[1], 0
+            if amount < min_amount+fee or amount > max_amount+fee:
+                logger.error(f"[{self.account.get_address()}] amount to bridge ({amount}) not in rhino limits (min: {min_amount+fee}, max: {max_amount+fee})")
+                return -1
+
+            rhino.bridge_to_scroll(amount, "ARBITRUM")
+        return buff()
 
     def simple_bridge(self, chain = None):            
         bridge_type = random.choice(SETTINGS["bridge_type"])
+        if bridge_type == "rhino":
+            chain = "arbitrum"
         while True:
             token, value = self.check_eth_balances(chain=chain)
             if token:
@@ -254,6 +267,7 @@ class Bridger:
             time.sleep(rand_time)
         value -= get_random_value(SETTINGS["SaveOnWallet"])
         net = token.net_name
+        
 
         real_value = get_random_value(SETTINGS["USDAmountToBridge"])
         usd_val = token.get_usd_value(value)
@@ -267,6 +281,8 @@ class Bridger:
             self.owlto_bridge(net, token_value)
         elif bridge_type == "orbiter":
             self.orbiter_bridge(net, token_value)
+        elif bridge_type == "rhino":
+            self.rhino_bridge(net, token_value)
         else:
             logger.error(f"[{self.account.get_address()}] selected unsupported bridge({bridge_type})")
 

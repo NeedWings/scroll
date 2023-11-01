@@ -252,6 +252,21 @@ class Account(BaseAccount):
     def get_balance(self, token):
         return token.get_balance(self.address)
     
+    def send_without_wait(self, txns, net):
+        for txn in txns:
+
+            if txn == None:
+                continue
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
+
+            gasEstimate = w3.eth.estimate_gas(txn)
+
+            txn['gas'] = round(gasEstimate*1.5) 
+            signed_txn = w3.eth.account.sign_transaction(txn, private_key=self.private_key)
+            tx_token = w3.to_hex(w3.eth.send_raw_transaction(signed_txn.rawTransaction))
+
+            logger.success(f"[{self.address}] sending txn: {tx_token}")
+            return True, signed_txn, tx_token
     def send_txn(self, txns, net):
         for txn in txns:
 

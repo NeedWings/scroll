@@ -101,21 +101,10 @@ class MainRouter():
 
 
     def rrr(self):
-        rh = Rhino()
-
-        rh.bridge_to_scroll(0.1)
-        auth_msg = "0x546f2070726f7465637420796f7572207268696e6f2e666920707269766163792077652061736b20796f7520746f207369676e20696e207769746820796f75722077616c6c657420746f2073656520796f757220646174612e0a5369676e696e6720696e206f6e2053756e2c203239204f637420323032332030383a35393a323220474d542e20466f7220796f7572207361666574792c206f6e6c79207369676e2074686973206d657373616765206f6e207268696e6f2e666921"
-        addr = self.account.address
-        encoded_auth_msg = encode_defunct(hexstr=auth_msg)
-        
-        w3 = Web3(Web3.HTTPProvider(RPC_LSIT["scroll"]))
-        signed_auth = w3.eth.account.sign_message(encoded_auth_msg, private_key = self.account.private_key)
-        token_id = "0xb333e3142fe16b78628f19bb15afddaef437e72d6d7f5c6c20c6801a27fba6"
-        default_expirity = 476148
-        nonce = random.randint(1, 2**31-1)
-
-        print(signed_auth)
-        print("0x027c20300ed1eb2b4baf2693fc5a9d1b535e9723477c0718ae9e60412e5fb892")
+        for i in range(1):
+            rh = Rhino(self.account)
+            rh.bridge_to_scroll(0.001, "arbitrum")
+       
 
 
     def dmail(self):
