@@ -21,7 +21,7 @@ try:
                 message=colored("Choose soft work task", 'light_yellow'),
                 choices=[
                     "encode secrets",
-                    "qwe",
+                    "",
                     "(1) simple bridge",
                     "(2) collect stables",
                     "(3) withdraw",
@@ -36,7 +36,8 @@ try:
                     "",
                     "(10) full",
                     "",
-                    "(12) deploy contract"
+                    "(12) deploy contract",
+                    "",
                     "own tasks"
                 ],
             )
