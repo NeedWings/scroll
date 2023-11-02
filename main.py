@@ -21,7 +21,7 @@ try:
                 message=colored("Choose soft work task", 'light_yellow'),
                 choices=[
                     "encode secrets",
-                    "",
+                    "qwe",
                     "(1) simple bridge",
                     "(2) collect stables",
                     "(3) withdraw",
@@ -35,6 +35,8 @@ try:
                     "(9) dmail",
                     "",
                     "(10) full",
+                    "",
+                    "(12) deploy contract"
                     "own tasks"
                 ],
             )
@@ -78,7 +80,7 @@ try:
             task_number = 10
         elif action == "own tasks":
             task_number = 0
-        elif action == "qwe":
+        elif action == "(12) deploy contract":
             task_number = 12
 
         
@@ -95,10 +97,10 @@ try:
             print(f"Soft found {counter} keys to work")
             tasks = []
             delay = 0
+            shuffle(accounts)
             for account in accounts:
                 tasks.append(Thread(target = MainRouter(account, delay, task_number).start))
                 delay += get_random_value_int(SETTINGS["ThreadRunnerSleep"])
-            shuffle(tasks)
             for i in tasks:
                 i.start()
 
