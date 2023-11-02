@@ -33,14 +33,16 @@
 
         "dmail_messages_amount": [1, 2],
 
+        "contract_for_deploy": ["blank", "merkly", "remix"],
+
 
 
     "======== BRIDGE =========": "",
-        "MinEthValue"                 : 0.01, // minimal value of eth to be on wallet
-        "SaveOnWallet"                : [0.004, 0.007], // how many eth save on wallet
+        "MinEthValue"                 : 0.001, // minimal value of eth to be on wallet
+        "SaveOnWallet"                : [0.0004, 0.0006], // how many eth save on wallet
         "USDAmountToBridge"           : [20, 20], // amount in usd to bridge
-        "nets_for_deposit"            : ["arbitrum", "ethereum"],
-        "bridge_type"                 : ["orbiter"],
+        "nets_for_deposit"            : ["arbitrum"],
+        "bridge_type"                 : ["rhino"],
 
     
     "======== WITHDRAW  =========": "",
