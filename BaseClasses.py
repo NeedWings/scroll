@@ -73,7 +73,7 @@ class EVMTransactionDataHandler():
 
         if self.net_name not in ['arbitrum', "avalanche", "polygon", "ethereum", "base"]:
             data["gasPrice"] = gas_price
-            
+
         else:
             data["maxFeePerGas"] = gas_price
             if self.net_name == "polygon":
@@ -84,6 +84,8 @@ class EVMTransactionDataHandler():
                 data["maxPriorityFeePerGas"] = Web3.to_wei(0.05, "gwei")
             elif self.net_name == "arbitrum":
                 data["maxPriorityFeePerGas"] = Web3.to_wei(0.01, "gwei")
+        if self.net_name == "scroll":
+            data["gasPrice"] = int(gas_price*SETTINGS["txn_gas_price_coeff"])
         return data
 
 class BaseAccount(ABC):

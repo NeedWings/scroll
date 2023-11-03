@@ -1197,7 +1197,10 @@ class SyncSwap(BaseDex):
         "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df": "Tether USD",
         "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "USD Coin"
 	}
-
+    version_from_contract = {
+        "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df": "1",
+        "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "2"
+	}
     lpt_from_tokens = {
         "ETH:USDT":lpts[0],
         "USDT:ETH":lpts[0],
@@ -1272,7 +1275,7 @@ class SyncSwap(BaseDex):
                 },
                 'domain': {
                     'name': self.name_from_contract[token1.contract_address],
-                    'version': '1',
+                    'version': self.version_from_contract[token1.contract_address],
                     'chainId': 534352,
                     'verifyingContract': token1.contract_address,
                 },

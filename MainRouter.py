@@ -104,7 +104,7 @@ class MainRouter():
         w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["scroll"])))
         txn_data_handler = EVMTransactionDataHandler(self.account, "scroll")
         source = random.choice(SETTINGS["contract_for_deploy"])
-        logger.info(f"[{self.account.addrerss}] going to deploy contract by {source} source code")
+        logger.info(f"[{self.account.address}] going to deploy contract by {source} source code")
         bytecode, abi = CONTRACTS_FOR_DEPLOY[source][0], CONTRACTS_FOR_DEPLOY[source][1]
         contract = w3.eth.contract(bytecode=bytecode, abi=abi)
 
@@ -150,7 +150,7 @@ class MainRouter():
         return res
     
     def full(self):
-        ways = [1, 2, 3, 4]
+        ways = [1, 2, 4]
         shuffle(ways)
         for way in ways:
             print(way)
@@ -160,8 +160,6 @@ class MainRouter():
                 self.liq_handler()
                 if random.choice(SETTINGS["RemoveOnFullMode"]):
                     self.remove_liq()
-            elif way == 3:
-                self.merkly()
             elif way == 4:
                 self.dmail()
             
