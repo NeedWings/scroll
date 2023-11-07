@@ -101,18 +101,16 @@ class MainRouter():
 
 
     def deploy_contracts(self):
-        try:
-            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["scroll"])))
-            txn_data_handler = EVMTransactionDataHandler(self.account, "scroll")
-            source = random.choice(SETTINGS["contract_for_deploy"])
-            logger.info(f"[{self.account.address}] going to deploy contract by {source} source code")
-            bytecode, abi = CONTRACTS_FOR_DEPLOY[source][0], CONTRACTS_FOR_DEPLOY[source][1]
-            contract = w3.eth.contract(bytecode=bytecode, abi=abi)
+        w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["scroll"])))
+        txn_data_handler = EVMTransactionDataHandler(self.account, "scroll")
+        source = random.choice(SETTINGS["contract_for_deploy"])
+        logger.info(f"[{self.account.address}] going to deploy contract by {source} source code")
+        bytecode, abi = CONTRACTS_FOR_DEPLOY[source][0], CONTRACTS_FOR_DEPLOY[source][1]
+        contract = w3.eth.contract(bytecode=bytecode, abi=abi)
 
-            txn = contract.constructor().build_transaction(txn_data_handler.get_txn_data())
-            self.account.send_txn([txn], "scroll")
-        except Exception as e:
-            logger.error(f"[{self.account.get_address()}] got erroor: {e}")
+        txn = contract.constructor().build_transaction(txn_data_handler.get_txn_data())
+        self.account.send_txn([txn], "scroll")
+        sleeping_sync(self.account.address)
 
 
     def dmail(self):

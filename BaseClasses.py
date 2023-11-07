@@ -86,6 +86,9 @@ class EVMTransactionDataHandler():
                 data["maxPriorityFeePerGas"] = Web3.to_wei(0.01, "gwei")
         if self.net_name == "scroll":
             data["gasPrice"] = int(gas_price*SETTINGS["txn_gas_price_coeff"])
+            if data["gasPrice"] < Web3.to_wei(SETTINGS["MinScrollGwei"], "gwei"):
+                data["gasPrice"] = Web3.to_wei(SETTINGS["MinScrollGwei"], "gwei")
+    
         return data
 
 class BaseAccount(ABC):
@@ -192,7 +195,7 @@ class EVMNativeToken(EVMToken):
                 sleeping_sync(address, True)
 
     
-
+    
 
     def create_unwrap_txn(self, sender):
         txn_data_handler = EVMTransactionDataHandler(sender, self.net_name)
@@ -254,7 +257,30 @@ class Account(BaseAccount):
     def get_balance(self, token):
         return token.get_balance(self.address)
     
+    def wait_for_better_eth_gwei(self):
+        
+        w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["ethereum"])))
+        while True:
+            f = open(f"{SETTINGS_PATH}settings.json", "r")
+            a = json_remove_comments(f.read())
+            SETTINGS = json.loads(a)
+            f.close()
+            max_gas = Web3.to_wei(SETTINGS["MaxEthGwei"], 'gwei')
+            try:
+                gas_price = w3.eth.gas_price
+                if gas_price > max_gas:
+                    h_gas, h_max = Web3.from_wei(gas_price, 'gwei'), Web3.from_wei(max_gas, 'gwei')
+                    logger.error(f'[{self.address}] Current gasPrice in eth: {h_gas} | Max gas price in eth: {h_max}')
+                    sleeping_sync(self.address, True)
+                else:
+                    return round(gas_price)
+                
+            except Exception as error:
+                logger.error(f'[{self.address}] Error: {error}')
+                sleeping_sync(self.address, True)
+
     def send_without_wait(self, txns, net):
+        self.wait_for_better_eth_gwei()
         for txn in txns:
 
             if txn == None:
@@ -270,6 +296,7 @@ class Account(BaseAccount):
             logger.success(f"[{self.address}] sending txn: {tx_token}")
             return True, signed_txn, tx_token
     def send_txn(self, txns, net):
+        self.wait_for_better_eth_gwei()
         for txn in txns:
 
             if txn == None:

@@ -200,14 +200,15 @@ class Bridger:
             self.account.send_txn([txn], net_name)
         buff()
     
-    def check_eth_balances(self, chain = None):
+    def check_eth_balances(self, chain = None, chains=None):
         token: EVMToken = None
         value: float = 0.0
+        if not chains:
+            chains = self.native_chains.copy()
         if chain:
-            native_chains = [chain]
-        else:
-            native_chains = self.native_chains.copy()
-        for chain in native_chains:
+            chains = [chain]
+        
+        for chain in chains:
             ether = chain_natives[chain]
             balance = self.account.get_balance(ether)[1]
             logger.info(f"[{self.account.get_address()}] ({chain}) {ether.symbol} balance: {balance}")
@@ -250,15 +251,21 @@ class Bridger:
                 logger.error(f"[{self.account.get_address()}] amount to bridge ({amount}) not in rhino limits (min: {min_amount+fee}, max: {max_amount+fee})")
                 return -1
 
-            rhino.bridge_to_scroll(amount, "ARBITRUM")
+            rhino.bridge_to_scroll(amount, net_name)
         return buff()
 
     def simple_bridge(self, chain = None):            
         bridge_type = random.choice(SETTINGS["bridge_type"])
+        chains = None
         if bridge_type == "rhino":
-            chain = "arbitrum"
+            chains = []
+            if "arbitrum" in SETTINGS["nets_for_deposit"]:
+                chains.append("arbitrum")
+            if "zksync" in SETTINGS["nets_for_deposit"]:
+                chains.append("zksync")
+            
         while True:
-            token, value = self.check_eth_balances(chain=chain)
+            token, value = self.check_eth_balances(chain=chain, chains=chains)
             if token:
                 break
             logger.info(f"[{self.account.get_address()}] all balances below min({SETTINGS['MinEthValue']}). keep looking")
@@ -285,13 +292,13 @@ class Bridger:
             self.rhino_bridge(net, token_value)
         else:
             logger.error(f"[{self.account.get_address()}] selected unsupported bridge({bridge_type})")
+        sleeping_sync(self.account.get_address())
 
         
 
 
     def collector(self):
         dist_chain = random.choice(SETTINGS["nets_for_deposit"])
-        dist_chain = "ethereum"
         token1 = chains_tokens[dist_chain][0]
         token2 = chains_tokens[dist_chain][1]
         

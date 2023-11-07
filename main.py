@@ -97,6 +97,9 @@ try:
             accounts, counter = transform_keys(private_keys, addresses)
             print(f"Soft found {counter} keys to work")
             tasks = []
+            if SETTINGS["delayed_start"]:
+                console_log.info("sleeping {(SETTINGS['delayed_start_time']} hours")
+                sleep(SETTINGS["delayed_start_time"]*3600)
             delay = 0
             shuffle(accounts)
             for account in accounts:

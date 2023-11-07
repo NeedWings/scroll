@@ -204,6 +204,7 @@ BSC_RPC = SETTINGS["RPC"]["bsc"]
 POLYGON_RPC = SETTINGS["RPC"]["polygon"]
 AVAX_RPC = SETTINGS["RPC"]["avalanche"]
 SCROLL_RPC = SETTINGS["RPC"]["scroll"]
+ZKSYNC_RPC = SETTINGS["RPC"]["zksync"]
 
 
 RPC_LSIT = {
@@ -213,7 +214,8 @@ RPC_LSIT = {
     "bsc": BSC_RPC,
     "polygon": POLYGON_RPC,
     "avalanche": AVAX_RPC,
-    "scroll": SCROLL_RPC
+    "scroll": SCROLL_RPC,
+    "zksync": ZKSYNC_RPC
 }
 
 
@@ -236,14 +238,16 @@ NATIVE_TOKENS_SYMBOLS = {
      "avalanche": "AVAX",
      "ethereum": "ETH",
      "base": "ETH",
-     "scroll":"ETH"
+     "scroll":"ETH",
+     "zksync": "ETH"
 }
 NATIVE_WRAPPED_CONTRACTS = {
     "arbitrum": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     "optimism": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE",
     "ethereum": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
     "base": "0x4200000000000000000000000000000000000006",
-    "scroll": "0x5300000000000000000000000000000000000004"
+    "scroll": "0x5300000000000000000000000000000000000004",
+    "zksync": "0x000000000000000000000000000000000000800A"
 }
 
 slippage = SETTINGS["Slippage"]

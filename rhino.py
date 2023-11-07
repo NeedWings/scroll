@@ -14,11 +14,15 @@ import pytz
 import chardet
 
 class Rhino:
-    contract_address = "0x10417734001162Ea139e8b044DFe28DbB8B28ad0"
+    contracts = {
+        "arbitrum": "0x10417734001162Ea139e8b044DFe28DbB8B28ad0",
+        "zksync": "0x1fa66e2B38d0cC496ec51F81c3e05E6A6708986F"
+    }
     ABI = [{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"}],"name":"BridgedDeposit","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"user","type":"address"},{"indexed":true,"internalType":"address","name":"token","type":"address"},{"indexed":false,"internalType":"uint256","name":"amount","type":"uint256"},{"indexed":false,"internalType":"string","name":"withdrawalId","type":"string"}],"name":"BridgedWithdrawal","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"internalType":"uint8","name":"version","type":"uint8"}],"name":"Initialized","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"previousOwner","type":"address"},{"indexed":true,"internalType":"address","name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"addFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"addFundsNative","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bool","name":"value","type":"bool"}],"name":"allowDeposits","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"user","type":"address"},{"internalType":"bool","name":"value","type":"bool"}],"name":"authorize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"authorized","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"deposit","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"depositNative","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[],"name":"depositsDisallowed","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"initialize","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"owner","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"string","name":"","type":"string"}],"name":"processedWithdrawalIds","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"removeFunds","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"removeFundsNative","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"renounceOwnership","outputs":[],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwner","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"withdrawalId","type":"string"}],"name":"withdraw","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"string","name":"withdrawalId","type":"string"}],"name":"withdrawNative","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address payable","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawNativeV2","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"token","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"withdrawV2","outputs":[],"stateMutability":"nonpayable","type":"function"},{"stateMutability":"payable","type":"receive"}]
     def net_name_to_net(self, net_name):
         nets = {
-            "arbitrum": "ARBITRUM"
+            "arbitrum": "ARBITRUM",
+            "zksync": "ZKSYNC"
         }
         return nets[net_name]
 
@@ -58,16 +62,15 @@ class Rhino:
             condition
         )
 
-    def deposit(self, amount):
-        txn_data_handler = EVMTransactionDataHandler(self.account, "arbitrum")
- 
-        w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["arbitrum"])))
+    def deposit(self, amount, net_name):
+        txn_data_handler = EVMTransactionDataHandler(self.account, net_name)
+        w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net_name])))
 
-        contract = w3.eth.contract(self.contract_address, abi=self.ABI)
+        contract = w3.eth.contract(self.contracts[net_name], abi=self.ABI)
 
         txn = contract.functions.depositNative().build_transaction(txn_data_handler.get_txn_data(int(amount*1e18)))
 
-        return self.account.send_without_wait([txn], "arbitrum")
+        return self.account.send_without_wait([txn], net_name)
 
         
 
@@ -228,7 +231,6 @@ class Rhino:
         r = requests.post("https://api.rhino.fi/v1/trading/r/recoverTradingKey", headers={
             "authorization": auth
         }, json={"ethAddress": self.account.address})
-
         encrypted_key =  r.json()["encryptedTradingKey"]
 
         return self.decode_trading_key(encrypted_key)
@@ -300,9 +302,8 @@ class Rhino:
         
         byte_msg = bytes.fromhex(cipher.decrypt(bytes.fromhex(cipher_text)).hex())
         msg = byte_msg.decode().replace("\x05", "") 
-
-       
-        return json.loads(msg.replace("\x05", ""))['data']
+        
+        return json.loads(msg.replace("\x05", "").replace("\x06", ""))['data']
 
 
 
@@ -460,7 +461,6 @@ class Rhino:
                 starkVaultId = self.get_user_data(auth)["tokenRegistry"]["ETH"]["starkVaultId"]
             except:
                 starkVaultId = self.get_eth_info(auth)
-
         token, chain, amount, nonce = data["token"], data["chain"], data["amount"], data["nonce"]
         url = "https://api.rhino.fi/v1/trading/r/vaultIdAndStarkKey?token=ETH&targetEthAddress=0xaf8ae6955d07776ab690e565ba6fbc79b8de3a5d"
         c = 0
@@ -508,19 +508,19 @@ class Rhino:
         return r.json()
 
     def bridge_to_scroll(self, amount, net):
-       
+        net_name = self.net_name_to_net(net)
         data, authNonce, signature, auth = self.createBridgedWithdrawalPayload({"token": "ETH", "chain": "SCROLL", "amount": amount, "nonce": None})
         if auth == 0:
             logger.error(f"[{self.account.address}] can't create rhino txn")
             return
-        success, signed_txn, tx_token =self.deposit(amount=amount) #True, 0, "0xd787e2ddfa3da5e3cb3a8b48b4181bba9a4125888d57580735c5c98f3ef5fc4d"#
+        success, signed_txn, tx_token =self.deposit(amount=amount, net_name=net) #True, 0, "0xd787e2ddfa3da5e3cb3a8b48b4181bba9a4125888d57580735c5c98f3ef5fc4d"#
 
         if not success:
             return
         data ={
             "amount": str(int(amount*100000000)),
             "bridge": data,
-            "chain": "ARBITRUM",
+            "chain": net_name,
             "token": "ETH",
             "txHash": tx_token
         }

@@ -24,6 +24,8 @@ avax_usdc = EVMToken("USDC", "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", 6, "a
 polygon_usdt = EVMToken("USDT", "0xc2132D05D31c914a87C6611C10748AEb04B58e8F", 6, "polygon", stable=True)
 polygon_usdc = EVMToken("USDC", "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174", 6, "polygon", stable=True)
 
+eth_zk = EVMNativeToken("zksync")
+
 tokens = [
     eth,
     dai,
@@ -51,5 +53,6 @@ chains_tokens = {
 chain_natives = {
     "scroll": eth,
     "arbitrum": eth_arb,
-    "ethereum": eth_eth
+    "ethereum": eth_eth,
+    "zksync": eth_zk
 }
