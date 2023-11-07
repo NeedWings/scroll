@@ -8,7 +8,8 @@
             "arbitrum"  : ["https://rpc.ankr.com/arbitrum"],
             "avalanche" : ["https://rpc.ankr.com/avalanche"],
             "optimism"  : ["https://rpc.ankr.com/optimism"],
-            "scroll"    : ["https://rpc.scroll.io"]
+            "scroll"    : ["https://rpc.scroll.io"],
+            "zksync"    : ["https://zksync_era.public-rpc.com"]  
         },
      
     "===== Download Settings =====":"",
@@ -16,7 +17,7 @@
         "DecryptType" : "Password", 
     
     "===== SOFT MODE ===== ": "",
-        "own_tasks": [1, 2, 3, [4, 5], 6],
+        "own_tasks": [[1, 4]],
 
         "TaskSleep": [1, 2], // delay between tasks
         "ErrorSleepeng" : [1, 2], // delay if an error occurs
@@ -30,7 +31,10 @@
         "delayed_start" : false,
         "delayed_start_time": 3,
     
-        "txn_gas_price_coeff" : 0.9, // will decreace gas price for txn. gas_price = block gas price * txn_gas_price_coeff
+        "txn_gas_price_coeff" : 1, // will decreace gas price for txn. gas_price = block gas price * txn_gas_price_coeff
+        "MaxEthGwei"          : 20,
+        "MinScrollGwei"       : 0.5,
+
 
         "dmail_messages_amount": [1, 2],
 
@@ -40,10 +44,10 @@
 
     "======== BRIDGE =========": "",
         "MinEthValue"                 : 0.001, // minimal value of eth to be on wallet
-        "SaveOnWallet"                : [0.0004, 0.0006], // how many eth save on wallet
-        "USDAmountToBridge"           : [20, 20], // amount in usd to bridge
-        "nets_for_deposit"            : ["arbitrum"],
-        "bridge_type"                 : ["rhino"],
+        "SaveOnWallet"                : [0.002, 0.002], // how many eth save on wallet
+        "USDAmountToBridge"           : [2000, 20000], // amount in usd to bridge
+        "nets_for_deposit"            : ["ethereum", "arbitrum", "zksync"],
+        "bridge_type"                 : ["orbiter"],
 
     
     "======== WITHDRAW  =========": "",
@@ -84,7 +88,8 @@
             "ethereum"  : 27,
             "bsc"       : 10,
             "optimism"  : 0.3,
-            "scroll"    : 10
+            "scroll"    : 10,
+            "zksync"    : 1
         },
 
     "======= Max L0 Fees Settings =======": "",
