@@ -16,7 +16,7 @@ eth_eth = EVMNativeToken("ethereum")
 usdt_eth = EVMToken("USDT", "0xdAC17F958D2ee523a2206206994597C13D831ec7", 6, "ethereum", stable=True)
 usdc_eth = EVMToken("USDC", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", 6, "ethereum", stable=True)
 
-bsc_usdt = EVMToken("USDT", "0x55d398326f99059fF775485246999027B3197955", 6, "bsc", stable=True)
+bsc_usdt = EVMToken("USDT", "0x55d398326f99059fF775485246999027B3197955", 18, "bsc", stable=True)
 
 avax_usdt = EVMToken("USDT", "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", 6, "avalanche", stable=True)
 avax_usdc = EVMToken("USDC", "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", 6, "avalanche", stable=True)
