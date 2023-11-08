@@ -101,7 +101,7 @@ class MainRouter():
 
 
     def deploy_contracts(self):
-         try:
+        try:
             w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["scroll"])))
             txn_data_handler = EVMTransactionDataHandler(self.account, "scroll")
             source = random.choice(SETTINGS["contract_for_deploy"])
