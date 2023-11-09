@@ -38,6 +38,8 @@ try:
                     "",
                     "(12) deploy contract",
                     "",
+                    "(13) mint zkstars",
+                    "",
                     "own tasks"
                 ],
             )
@@ -83,6 +85,8 @@ try:
             task_number = 0
         elif action == "(12) deploy contract":
             task_number = 12
+        elif action == "(13) mint zkstars":
+            task_number = 13
 
         
         for i in range(len(addresses)):
