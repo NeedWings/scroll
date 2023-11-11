@@ -32,13 +32,17 @@
         "delayed_start_time": 3,
     
         "txn_gas_price_coeff" : 1, // will decreace gas price for txn. gas_price = block gas price * txn_gas_price_coeff
-        "MaxEthGwei"          : 20,
+        "MaxEthGwei"          : 200,
         "MinScrollGwei"       : 0.5,
 
 
         "dmail_messages_amount": [1, 2],
 
         "contract_for_deploy": ["blank", "merkly", "remix"],
+
+        "zkstars_amount": [2, 3],
+        "use_ref_for_zkstars": true,
+        "ref_for_zkstars": "0x79a49A6EDC7888632ED61B72A70D1Ce1CCa25e9c",
 
 
 
