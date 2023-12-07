@@ -64,7 +64,7 @@ class Rhino:
 
     def deposit(self, amount, net_name):
         txn_data_handler = EVMTransactionDataHandler(self.account, net_name)
-        w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net_name])))
+        w3: Web3 = self.account.get_w3(net_name)
 
         contract = w3.eth.contract(self.contracts[net_name], abi=self.ABI)
 
@@ -245,7 +245,7 @@ class Rhino:
 
         enable_msg = {"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"}],"rhino.fi":[{"type":"string","name":"action"},{"type":"string","name":"onlySignOn"}]},"domain":{"name":"rhino.fi","version":"1.0.0"},"primaryType":"rhino.fi","message":{"action":"Access your rhino.fi account","onlySignOn":"app.rhino.fi"}}
         encoded_enable_msg = encode_structured_data(enable_msg)
-        w3 = Web3(Web3.HTTPProvider(RPC_LSIT["scroll"]))
+        w3 = self.account.get_w3('scroll')
         signed_enable = w3.eth.account.sign_message(encoded_enable_msg, private_key = self.account.private_key)
         r = hex(signed_enable.r)
         if len(r)%2 != 0:
@@ -312,7 +312,7 @@ class Rhino:
         #dtk = "0x6156e5c85c87d2b085f0d5a439c5cce6c5fd8933f1ad5878ef5692f8923bc478"
         enable_msg = {"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"}],"rhino.fi":[{"type":"string","name":"action"},{"type":"string","name":"onlySignOn"}]},"domain":{"name":"rhino.fi","version":"1.0.0"},"primaryType":"rhino.fi","message":{"action":"Access your rhino.fi account","onlySignOn":"app.rhino.fi"}}
         encoded_enable_msg = encode_structured_data(enable_msg)
-        w3 = Web3(Web3.HTTPProvider(RPC_LSIT["scroll"]))
+        w3 = self.account.get_w3('scroll')
         signed_enable = w3.eth.account.sign_message(encoded_enable_msg, private_key = self.account.private_key)
         data = hex(signed_enable.r) + hex(signed_enable.s)[2::] + hex(signed_enable.v)[2::]
         r = hex(signed_enable.r)
@@ -398,7 +398,7 @@ class Rhino:
         
         auth_msg = "0x"+ text.encode().hex()
         encoded_auth_msg = encode_defunct(hexstr=auth_msg)
-        w3 = Web3(Web3.HTTPProvider(RPC_LSIT["scroll"]))
+        w3 = self.account.get_w3('scroll')
         signed_auth = w3.eth.account.sign_message(encoded_auth_msg, private_key = self.account.private_key)
         authNonce = f"v3-{ts}"
         signature = hex(signed_auth.r) + hex(signed_auth.s)[2::] + hex(signed_auth.v)[2::]

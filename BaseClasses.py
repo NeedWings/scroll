@@ -34,7 +34,7 @@ class EVMTransactionDataHandler():
     def __init__(self, sender, net_name) -> None:
         self.address = sender.get_address()
         self.net_name = net_name
-        self.w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net_name])))
+        self.w3 = sender.get_w3(net_name)
     
     def get_gas_price(self):
         
@@ -110,17 +110,20 @@ class BaseAccount(ABC):
 class EVMToken():
     def __init__(self, symbol, contract_address, decimals, net, stable = False) -> None:
         self.net_name = net
-        self.w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
         self.decimals = decimals
         self.symbol = symbol
         self.contract_address = contract_address
-        self.contract = self.w3.eth.contract(contract_address, abi=ERC20_ABI)
         self.stable = stable
 
-    def get_balance(self, address, of_wrapped = False):
+    def get_balance(self, address, w3 = None, of_wrapped = False):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+        contract = w3.eth.contract(self.contract_address, abi=ERC20_ABI)
         while True:
             try:
-                balance = self.contract.functions.balanceOf(address).call()
+                balance = contract.functions.balanceOf(address).call()
                 human_balance = balance/10**self.decimals
                 return balance, human_balance
             except Exception as e:
@@ -128,11 +131,16 @@ class EVMToken():
                 sleeping_sync(address, True)
 
     
-    def get_approve_txn(self, sender: BaseAccount, spender, amount):
+    def get_approve_txn(self, sender: BaseAccount, spender, amount, w3 = None):
         @handle_error(account=sender)
-        def buff():
+        def buff(w3 = None):
+            if w3:
+                w3 = w3
+            else:
+                w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+            contract = w3.eth.contract(self.contract_address, abi=ERC20_ABI)
             txn_data_handler = EVMTransactionDataHandler(sender, self.net_name)
-            txn = self.contract.functions.approve(spender, amount).build_transaction(
+            txn = contract.functions.approve(spender, amount).build_transaction(
                                 txn_data_handler.get_txn_data()
                             )
             
@@ -141,7 +149,7 @@ class EVMToken():
             logger.info(f"[{sender.get_address()}] sleeping {t} s")
             sleep(t)
             return None
-        return buff()
+        return buff(w3)
     
     def get_price(self):
         if self.stable:
@@ -168,26 +176,28 @@ class EVMToken():
 class EVMNativeToken(EVMToken):
     def __init__(self, net) -> None:
         self.net_name = net
-        self.w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
         self.decimals = 18
         self.symbol = NATIVE_TOKENS_SYMBOLS[net]
         self.contract_address = NATIVE_WRAPPED_CONTRACTS[net]
         self.abi = [{"anonymous": False,"inputs":[{"indexed": True,"internalType":"address","name":"src","type":"address"},{"indexed": True,"internalType":"address","name":"guy","type":"address"},{"indexed": False,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous": False,"inputs":[{"indexed": True,"internalType":"address","name":"dst","type":"address"},{"indexed": False,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Deposit","type":"event"},{"anonymous": False,"inputs":[{"indexed": True,"internalType":"address","name":"src","type":"address"},{"indexed": True,"internalType":"address","name":"dst","type":"address"},{"indexed": False,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous": False,"inputs":[{"indexed": True,"internalType":"address","name":"src","type":"address"},{"indexed": False,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Withdrawal","type":"event"},{"payable": True,"stateMutability":"payable","type":"fallback"},{"constant": True,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": False,"inputs":[{"internalType":"address","name":"guy","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable": False,"stateMutability":"nonpayable","type":"function"},{"constant": True,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": True,"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": False,"inputs":[],"name":"deposit","outputs":[],"payable": True,"stateMutability":"payable","type":"function"},{"constant": True,"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": True,"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": True,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable": False,"stateMutability":"view","type":"function"},{"constant": False,"inputs":[{"internalType":"address","name":"dst","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable": False,"stateMutability":"nonpayable","type":"function"},{"constant": False,"inputs":[{"internalType":"address","name":"src","type":"address"},{"internalType":"address","name":"dst","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable": False,"stateMutability":"nonpayable","type":"function"},{"constant": False,"inputs":[{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"withdraw","outputs":[],"payable": False,"stateMutability":"nonpayable","type":"function"}]
-        self.contract = self.w3.eth.contract(self.contract_address, abi=self.abi)
         self.stable = False
 
 
 
-    def get_balance(self, address, of_wrapped = False):
-
+    def get_balance(self, address, w3 = None, of_wrapped = False):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+        contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:
                 if not of_wrapped:
-                    balance = self.w3.eth.get_balance(address)
+                    balance = w3.eth.get_balance(address)
                     human_balance = balance/10**self.decimals
                     return balance, human_balance
                 else:
-                    balance = self.contract.functions.balanceOf(address).call()
+                    balance = contract.functions.balanceOf(address).call()
                     human_balance = balance/10**self.decimals
                     return balance, human_balance
             except Exception as e:
@@ -197,40 +207,55 @@ class EVMNativeToken(EVMToken):
     
     
 
-    def create_unwrap_txn(self, sender):
+    def create_unwrap_txn(self, sender, w3 = None):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+        contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = EVMTransactionDataHandler(sender, self.net_name)
         while True:
             try:
-                amount = self.contract.functions.balanceOf(sender.get_address()).call()
+                amount = contract.functions.balanceOf(sender.get_address()).call()
                 break
             except Exception as e:
                 logger.error(f"[{sender.get_address()}] can't get balance of W{self.symbol}: {e}")
                 sleeping_sync(sender.get_address(), True)
         if amount <= 1:
             return None
-        txn = self.contract.functions.withdraw(
+        txn = contract.functions.withdraw(
             amount
         ).build_transaction(txn_data_handler.get_txn_data())
         return txn
     
-    def create_wrap_txn(self, wei: bool, amount, sender):
+    def create_wrap_txn(self, wei: bool, amount, sender, w3 = None):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+        contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = EVMTransactionDataHandler(sender, self.net_name)
         if not wei:
             amount = int(amount*10**self.decimals)
-        txn = self.contract.functions.deposit().build_transaction(txn_data_handler.get_txn_data(amount))
+        txn = contract.functions.deposit().build_transaction(txn_data_handler.get_txn_data(amount))
 
         return txn
 
-    def get_approve_txn(self, address, spender, amount):
+    def get_approve_txn(self, address, spender, amount, w3 = None):
         return None
     
-    def get_approve_txn_wrapped(self, wei, sender: BaseAccount, spender, amount):
+    def get_approve_txn_wrapped(self, wei, sender: BaseAccount, spender, amount, w3 = None):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[self.net])))
+        contract = w3.eth.contract(self.contract_address, abi=self.abi)
         @handle_error(account=sender)
         def buff(amount):
             if not wei:
                 amount = int(amount*10**self.decimals)
             txn_data_handler = EVMTransactionDataHandler(sender, self.net_name)
-            txn = self.contract.functions.approve(spender, amount).build_transaction(
+            txn = contract.functions.approve(spender, amount).build_transaction(
                                 txn_data_handler.get_txn_data()
                             )
             
@@ -246,20 +271,43 @@ class EVMNativeToken(EVMToken):
 
 
 class Account(BaseAccount):
-    def __init__(self, private_key: str):
+    w3 = {}
+
+
+    def __init__(self, private_key: str, proxy=None):
         self.private_key = private_key
         self.address = ethAccount.from_key(private_key).address
         self.formatted_hex_address = self.address
+        self.setup_w3(proxy=proxy)
+        
+    def get_w3(self, net_name):
+        return self.w3[net_name]
+    
+    def setup_w3(self, proxy=None):
+        if proxy:
+            req_proxy = {
+                "proxies": {
+                    "http"  : proxy,
+                    "https" : proxy
+                },
+                "timeout": 10
+            }
+            self.proxies = req_proxy["proxies"]
+            for chain in RPC_LSIT:
+                self.w3[chain] =  Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[chain]), request_kwargs=req_proxy))
+        else:
+            for chain in RPC_LSIT:
+                self.w3[chain] =  Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[chain])))
 
     def get_address(self):
         return self.address
     
-    def get_balance(self, token):
-        return token.get_balance(self.address)
+    def get_balance(self, token: EVMToken):
+        return token.get_balance(self.address, w3 = self.get_w3(token.net_name))
     
     def wait_for_better_eth_gwei(self):
         
-        w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["ethereum"])))
+        w3 = self.get_w3('ethereum')
         while True:
             f = open(f"{SETTINGS_PATH}settings.json", "r")
             a = json_remove_comments(f.read())
@@ -285,7 +333,7 @@ class Account(BaseAccount):
 
             if txn == None:
                 continue
-            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
+            w3 = self.get_w3(net)
 
             gasEstimate = w3.eth.estimate_gas(txn)
 
@@ -301,7 +349,7 @@ class Account(BaseAccount):
 
             if txn == None:
                 continue
-            w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
+            w3 = self.get_w3(net)
 
             gasEstimate = w3.eth.estimate_gas(txn)
 
@@ -315,7 +363,7 @@ class Account(BaseAccount):
 
     
     def wait_until_txn_finished(self, hash, net, max_time = 500):
-        w3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[net])))
+        w3 = self.get_w3(net)
         start_time = time.time()
         while True:
             try:

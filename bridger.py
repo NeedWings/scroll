@@ -100,7 +100,7 @@ class Bridger:
             if real_value > value:
                 real_value = value
 
-            w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[src_chain])))
+            w3: Web3 = self.account.get_w3(src_chain)
             contract = w3.eth.contract(self.STARGATE_CONTRACTS[src_chain], abi=STARGATE_ABI)
 
             fee = self.quote_layer_zero_fee(dist_chain, src_chain, contract)
@@ -148,11 +148,11 @@ class Bridger:
             return 1
         return buff()
     
-    def swap_stables_to_eth(self, token):
+    def swap_stables_to_eth(self, token: EVMToken):
         @handle_error(account=self.account)
         def buff():
             sushi = SushiSwap()
-            balance = self.account.get_balance(token)[1]
+            balance = self.account.get_balance(token, self.account.get_w3(token.net_name))[1]
             real_value = get_random_value(SETTINGS["USDAmountToBridge"])
             if real_value > balance:
                 real_value = balance

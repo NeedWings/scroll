@@ -4,7 +4,6 @@ from token_stor import *
 
 
 class SyncSwap(BaseDex):
-    w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT["scroll"])))
     contract_address = "0x80e38291e06339d10AAB483C65695D004dBD5C69"
     ABI = [
   {
@@ -1184,7 +1183,6 @@ class SyncSwap(BaseDex):
     "type": "function"
   }
 ]
-    contract: Contract = w3.eth.contract(contract_address, abi=ABI)
     name = "SyncSwap"
     supported_tokens = ["ETH", "USDT", "USDC"]
 
@@ -1216,15 +1214,19 @@ class SyncSwap(BaseDex):
         "0x2076d4632853FB165Cf7c7e7faD592DaC70f4fe1": [usdc, usdt]
     }
 
-    def _get_nonce_of_liq_token(self, address: str, lpt: EVMToken):
+    def _get_nonce_of_liq_token(self, address: str, lpt: EVMToken, w3):
+        contract = w3.eth.contract(lpt.contract_address, abi=ERC20_ABI)
         while True:
             try:
-                nonce = lpt.contract.functions.nonces(address).call()
+                nonce = contract.functions.nonces(address).call()
                 return nonce
             except Exception as e:
                 logger.error(f"[{address}] got error while trying to get nonce of lpt: {e}")
+                sleeping_sync(address, True)
 
     def create_txn_for_swap(self, amount_in: float, token1: EVMToken, amount_out: float, token2: EVMToken, sender: BaseAccount, full: bool = False, native_first: bool = False):
+        w3 = sender.get_w3('scroll')
+        contract = w3.eth.contract(self.contract_address, abi=self.ABI)
         stable = token1.stable and token2.stable
         if token1.symbol == "ETH":
             native_first = True
@@ -1232,9 +1234,9 @@ class SyncSwap(BaseDex):
         swap_data = eth_abi.encode(['address', 'address', 'uint8'], [token1.contract_address, sender.get_address(), 1])
         deadline = int(time.time()+3600*5)
         if native_first:
-            approve_txn = token1.get_approve_txn(sender, self.contract_address, int(amount_in*10**token1.decimals))
+            approve_txn = token1.get_approve_txn(sender, self.contract_address, int(amount_in*10**token1.decimals), w3=w3)
             value = int(amount_in*10**token1.decimals)
-            function = self.contract.functions.swap
+            function = contract.functions.swap
             steps = [{
                 "pool": self.lpt_from_tokens[f"{token1.symbol}:{token2.symbol}"].contract_address,
                 "data": swap_data,
@@ -1255,7 +1257,7 @@ class SyncSwap(BaseDex):
             ).build_transaction(txn_data_handler.get_txn_data(value))
         else:
             approve_txn = None
-            token_nonce = self._get_nonce_of_liq_token(sender.get_address(), token1)
+            token_nonce = self._get_nonce_of_liq_token(sender.get_address(), token1, w3=w3)
             if token_nonce == 0:
                 msg = {
                 'types': {
@@ -1291,7 +1293,7 @@ class SyncSwap(BaseDex):
                 
                 encoded_msg = encode_structured_data(msg)
                 
-                signed_msg = self.w3.eth.account.sign_message(encoded_msg, sender.private_key)
+                signed_msg = w3.eth.account.sign_message(encoded_msg, sender.private_key)
               
 
                 r = signed_msg.r.to_bytes(32, "big")
@@ -1300,7 +1302,7 @@ class SyncSwap(BaseDex):
 
 
                 value = 0
-                function = self.contract.functions.swapWithPermit
+                function = contract.functions.swapWithPermit
                 steps = [{
 					"pool": self.lpt_from_tokens[f"{token1.symbol}:{token2.symbol}"].contract_address,
 					"data": swap_data,
@@ -1350,11 +1352,10 @@ class SyncSwap(BaseDex):
         return [approve_txn, txn]
 
 
-    def get_pool_rate(self, token1: EVMToken, token2: EVMToken):
+    def get_pool_rate(self, token1: EVMToken, token2: EVMToken, sender: BaseAccount):
         lpt = self.lpt_from_tokens[f"{token1.symbol}:{token2.symbol}"]
-
-        token1_val = token1.get_balance(lpt.contract_address, of_wrapped=True)[1]
-        token2_val = token2.get_balance(lpt.contract_address, of_wrapped=True)[1]
+        token1_val = token1.get_balance(lpt.contract_address, w3=sender.get_w3('scroll'), of_wrapped=True)[1]
+        token2_val = token2.get_balance(lpt.contract_address, w3=sender.get_w3('scroll'), of_wrapped=True)[1]
 
         token1_usd_val = token1.get_usd_value(token1_val)
         token2_usd_val = token2.get_usd_value(token2_val)

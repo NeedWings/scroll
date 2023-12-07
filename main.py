@@ -106,9 +106,37 @@ try:
                 sleep(SETTINGS["delayed_start_time"]*3600)
             delay = 0
             shuffle(accounts)
-            for account in accounts:
-                tasks.append(Thread(target = MainRouter(account, delay, task_number).start))
-                delay += get_random_value_int(SETTINGS["ThreadRunnerSleep"])
+            if SETTINGS["mobileProxy"] != "":
+                mobile_proxy = "http://" + SETTINGS["mobileProxy"]
+                proxy = {
+                    "http": mobile_proxy,
+                    "https": mobile_proxy
+                }
+
+                logger.info(f"Will use mobile proxy: {mobile_proxy}")
+                for account in accounts:
+                    change_proxies_ip(proxy, SETTINGS["ChangeUrl"])
+                    try:
+                        MainRouter(account, delay, task_number, proxy=mobile_proxy).start()
+                    except Exception as e:
+                        console_log.error("got error: {e}")
+                    sleep(get_random_value_int(SETTINGS["ThreadRunnerSleep"]))
+
+            elif SETTINGS["useProxies"]:
+                with open(f"{SETTINGS_PATH}proxies.txt", "r") as f:
+                    proxies_raw = f.read().split("\n")
+                proxies = {}
+                for proxy in proxies_raw:
+                    print(f'{proxy.split("@")[2]} connected to {"http://" + proxy.split("@")[0] + "@" + proxy.split("@")[1]}')
+                    proxies[proxy.split("@")[2].lower()] = "http://" + proxy.split("@")[0] + "@" + proxy.split("@")[1]
+                for account in accounts:
+                    tasks.append(Thread(target = MainRouter(account, delay, task_number, proxy=proxies[str(ethAccount.from_key(account).address).lower()]).start))
+                    delay += get_random_value_int(SETTINGS["ThreadRunnerSleep"])
+                
+            else:
+                for account in accounts:
+                    tasks.append(Thread(target = MainRouter(account, delay, task_number).start))
+                    delay += get_random_value_int(SETTINGS["ThreadRunnerSleep"])
             for i in tasks:
                 i.start()
 

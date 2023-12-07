@@ -118,6 +118,30 @@ def get_bytes(value: str) -> str:
     i = len(value)
     return '0x' + ''.join('0' for k in range(64-i)) + value
 
+def change_proxies_ip(proxies: dict, change_url: str):
+    def __get_current_ip__():
+        while True:
+            try:
+                return requests.get("https://api.ipify.org?format=json", proxies=proxies).json()["ip"]
+            except Exception as error:
+                logger.error(f'Failed to get ip: {error}')
+                time.sleep(5)
+
+    old_ip = __get_current_ip__()
+    logger.info(f'Old ip address: {old_ip}')
+
+    while old_ip == __get_current_ip__():
+        try:
+            response = requests.post(change_url).json()
+            logger.info(f'Change ip response: {response}')
+
+        except Exception as error:
+            logger.error(f'Failed to change ip: {error}')
+        
+        time.sleep(5)
+    
+    logger.info(f'New ip address: {__get_current_ip__()}')
+
 def get_orbiter_value(base_num: float):
     base_num_dec = decimal.Decimal(str(base_num))
     orbiter_amount_dec = decimal.Decimal(str(0.000000000000009004))

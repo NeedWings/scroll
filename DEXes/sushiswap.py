@@ -13,7 +13,7 @@ class SushiSwap:
     def swap_token_for_eth(self, token: EVMToken, amount_in: float, sender: BaseAccount):
 
         txn_data_handler = EVMTransactionDataHandler(sender, token.net_name)
-        w3: Web3 = Web3(Web3.HTTPProvider(random.choice(RPC_LSIT[token.net_name])))
+        w3 = sender.get_w3('scroll')
         contract = w3.eth.contract(self.contract_addresses[token.net_name], abi=SUSHI)
 
         usd_val = token.get_usd_value(amount_in)
@@ -21,7 +21,7 @@ class SushiSwap:
         eth_val = usd_val/eth_price
         eth_val = int((1-SETTINGS["Slippage"])*eth_val*1e18)
         logger.info(f"[{sender.get_address()}] going to swap {amount_in} {token.symbol} for ETH")
-        approve_txn = token.get_approve_txn(sender, self.contract_addresses[token.net_name], int(amount_in*10**token.decimals))
+        approve_txn = token.get_approve_txn(sender, self.contract_addresses[token.net_name], int(amount_in*10**token.decimals), w3=w3)
         txn = contract.functions.swapExactTokensForETH(
             int(amount_in*10**token.decimals),
             eth_val,
@@ -34,7 +34,6 @@ class SushiSwap:
         ).build_transaction(txn_data_handler.get_txn_data())
 
         sender.send_txn([txn], token.net_name)
-        return
 
 
         
