@@ -19,6 +19,10 @@
     "===== SOFT MODE ===== ": "",
         "own_tasks": [[1, 4]],
 
+        "useProxies": false,
+        "mobileProxy": "",
+        "ChangeUrl": "",
+
         "TaskSleep": [1, 2], // delay between tasks
         "ErrorSleepeng" : [1, 2], // delay if an error occurs
         "ThreadRunnerSleep" : [1, 2], // delay between two accounts starts work
