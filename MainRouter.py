@@ -95,6 +95,8 @@ class MainRouter():
             self.full()
         elif task_number == 13:
             self.zkstars()
+        elif task_number == 14:
+            self.scroll_origins()
 
     def zkstars(self):
         amount = get_random_value_int(SETTINGS["zkstars_amount"])
@@ -136,7 +138,39 @@ class MainRouter():
                 logger.error(f"[{self.account.address}] got error: {e}")
                 sleeping_sync(self.account.address, True)
 
+    def scroll_origins(self):
+        try:
+            contract_address = "0x74670A3998d9d6622E32D0847fF5977c37E0eC91"
+            w3 = self.account.get_w3("scroll")
+            contract = w3.eth.contract(contract_address, abi=SCROLL_ORIGINS)
+            txn_data_handler = EVMTransactionDataHandler(self.account, "scroll")
 
+
+            mint_data = req(f"https://nft.scroll.io/p/{self.account.address}.json?timestamp={int(time.time()*1000)}")
+
+            try:
+                best_deployed = mint_data["metadata"]["bestDeployedContract"]
+                first_deployed = mint_data["metadata"]["firstDeployedContract"]
+                rarity_data = mint_data["metadata"]["rarityData"]
+                proof = mint_data["proof"]
+            except Exception as e:
+                logger.info(f"[{self.account.address}] most likely not eligible: {e}")
+                return
+            
+            txn = contract.functions.mint(
+                self.account.address,
+                (
+                    self.account.address,
+                    first_deployed,
+                    best_deployed,
+                    int(rarity_data, 16)
+                ),
+                list(map(bytes.fromhex, list(map(lambda x: x[2::], proof))))
+            ).build_transaction(txn_data_handler.get_txn_data())
+
+            self.account.send_txn([txn], "scroll")
+        except Exception as e:
+            logger.error(f"[{self.account.address}] got error: {e}")
 
     def full_withdraw(self):
         self.remove_liq()
