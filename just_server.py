@@ -205,10 +205,19 @@ def check_pass():
         wallets = decrypt_private_keys(request.json["password"])
 
         if isinstance(wallets, dict):
+            print(len(wallets))
+            buff = dict(addrs_data)
+            for address in buff:
+                if address not in list(wallets.keys()):
+                    del addrs_data[address]
+                    dump_json(wallets_path, addrs_data)
             for address in wallets:
-                account = Account(wallets[address], proxy=addrs_data[address]["proxy"])
-                account.active = addrs_data[address]['flag']
-                accounts[address] = account
+                try:
+                    account = Account(wallets[address], proxy=addrs_data[address]["proxy"])
+                    account.active = addrs_data[address]['flag']
+                    accounts[address] = account
+                except:
+                    pass
         
         if isinstance(wallets, str):
             return answer(False, msg=wallets, change_status=False)
@@ -321,7 +330,6 @@ def change_bridge_settings():
 @app.route("/set-encode", methods=["POST"])
 def set_encode():
     data = request.json
-    print(data)
     password = data["password"]
     secrets = [i for i in data["wallets"] if len(i) in [64, 66]]
 
