@@ -79,7 +79,7 @@
         ]
     },
     "main": {
-        "key": "e4ee524f5b3e553067a0197f078a8e108bd4bcc5"
+        "key": "20ce9ce60e121cbdc84abdcdab183374d876897c"
     },
     "Exchanges": {
         "Binance": {
@@ -106,7 +106,7 @@
         "scroll": 100,
         "base": 100
     },
-    "mainStatus": true,
+    "mainStatus": false,
     "TimeSleeps": {
         "approve-sleep-max": "1",
         "approve-sleep-min": "1",

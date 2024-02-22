@@ -1,4 +1,5 @@
 import json
+import multiprocessing
 
 from eth_account import Account as ethAccount
 
@@ -9,6 +10,7 @@ def main():
     run_app()
             
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     main()
 
 
