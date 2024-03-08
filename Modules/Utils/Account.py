@@ -61,7 +61,7 @@ class Account(BaseAccount):
         return token.balance_of(self.address, w3=self.get_w3(token.net_name))
     
     def wait_for_better_eth_gwei(self):
-        w3 = self.w3["linea"]
+        w3 = self.w3["ethereum"]
         while True:
             max_gas = Web3.to_wei(float(get_general_settings()["TimeSleeps"]["max-ETH-gwei"]), 'gwei')
             try:
