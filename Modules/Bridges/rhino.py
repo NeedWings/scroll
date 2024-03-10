@@ -41,7 +41,6 @@ class Rhino:
 
     key_pair: tuple = None
     def __init__(self, account: Account) -> None:
-       
         self.account = account
     
     def set_key_pair(self, dtk: str):
@@ -517,6 +516,9 @@ class Rhino:
                          })
 
         return r.json()
+
+    #def withdraw_from_rhino(self):
+
 
     def bridge_to_scroll(self, amount, net):
         net_name = self.net_name_to_net(net)

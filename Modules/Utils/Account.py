@@ -12,6 +12,8 @@ from time import sleep
 
 class Account(BaseAccount):
     w3 = {}
+    proxies = None
+    
     def __init__(self, private_key: str, proxy = None):
         self.private_key = private_key
         self.address = ethAccount.from_key(private_key).address
@@ -19,7 +21,6 @@ class Account(BaseAccount):
         self.proxy = proxy
         self.setup_w3(proxy=proxy)
         self.active = False
-        print(self)
 
     def __str__(self) -> str:
         return f"private key: {self.private_key}\naddress: {self.address}\nis_active: {self.active}\nproxy: {self.proxies}\t{self.proxy}\nw3: {self.w3}"

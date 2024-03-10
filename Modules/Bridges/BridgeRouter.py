@@ -3,6 +3,7 @@ from Modules.Bridges.Orbiter import Orbiter
 from Modules.Dexes.OneInch import OneInch
 from Modules.Bridges.owlto import Owlto
 from Modules.Bridges.rhino import Rhino
+from Modules.Bridges.routernitro import RouterNitro
 from Modules.BaseClasses.BaseAccount import BaseAccount
 from Modules.Utils.Token import Token
 from Modules.Utils.token_stor import eth_ethereum, eth, eth_arbitrum, nets_eth
@@ -19,13 +20,15 @@ ORBITER_BRIDGE = 2
 OWLTO_WITHDRAW = 3
 ORBITER_WITHDRAW = 4
 RHINO_BRIDGE = 5
+ROUTER_NITRO_BRIDGE = 6
 
 class BridgeRouter:
 
     bridge_consts = {
         "Rhino": RHINO_BRIDGE,
         "Owlto": OWLTO_BRIDGE,
-        "Orbiter": ORBITER_BRIDGE
+        "Orbiter": ORBITER_BRIDGE,
+        "RouterNitro": ROUTER_NITRO_BRIDGE
     }
 
     withdraw_consts = {
@@ -41,6 +44,7 @@ class BridgeRouter:
         self.orbiter_handler = Orbiter(account)
         self.one_inch_handler = OneInch()
         self.rhino_handler = Rhino(account)
+        self.router_nitro = RouterNitro(account)
 
 
     def owlto_bridge(self):
@@ -56,10 +60,47 @@ class BridgeRouter:
                 else:
                     balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
 
-                if balance > 0.005:
+                if balance > 0.002:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
                     
                     txn = self.owlto_handler.get_bridge_txn(net, balance)
+                    if txn == -1:
+                        return
+                    self.account.send_txn(txn, net)
+                    break
+                else:
+                    logger.error(f'[{self.account.address}] Cant find any ETH balances')
+                    sleeping_sync(self.account.address, True)
+            except Exception as e:
+                logger.error(f"[{self.account.address}] got error: {e}")
+                sleeping_sync(self.account.address, True)
+        new_balance = start_balance
+        while new_balance == start_balance:
+            sleeping_sync(self.account.address)
+            new_balance = self.account.get_balance(eth)[1]
+
+            logger.info(f"[{self.account.address}] waiting for balance. current: {new_balance} ETH")
+            
+
+        logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
+
+    def router_nitro_bridge(self):
+        start_balance = self.account.get_balance(eth)[1]
+        while True:
+            try:
+                value, net, token = token_checker.get_max_valued_native(self.account, ["arbitrum", "optimism", "zksync", "ethereum", "linea"])
+
+                human_balance = value/1e18
+
+                if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
+                    balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                else:
+                    balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+
+                if balance > 0.002:
+                    logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
+                    
+                    txn = self.router_nitro.get_bridge_txn(net, balance)
                     if txn == -1:
                         return
                     self.account.send_txn(txn, net)
@@ -313,6 +354,8 @@ class BridgeRouter:
             self.withdraw_orbiter()
         elif bridge_type == RHINO_BRIDGE:
             self.rhino_bridge()
+        elif bridge_type == ROUTER_NITRO_BRIDGE:
+            self.router_nitro_bridge()
 
 
 

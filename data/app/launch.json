@@ -3,7 +3,8 @@
         "BridgeType": {
             "Orbiter": true,
             "Owlto": true,
-            "Rhino": true
+            "Rhino": true,
+            "RouterNitro": true
         },
         "bridge-all-balance": false,
         "eth-to-bridge-max": "0.006",
