@@ -1,12 +1,14 @@
 import random
-import requests
-from Modules.Utils.Logger import logger, console_log
 import time
-from Modules.config import SETTINGS_PATH, get_general_settings
 import string
 from threading import Event
-from web3 import Web3
 import json
+
+import requests
+from web3 import Web3
+
+from modules.utils.Logger import logger, console_log
+from modules.config import SETTINGS_PATH, get_general_settings
 
 def get_random_value_int(param):
     return random.randint(int(param[0]), int(param[1]))

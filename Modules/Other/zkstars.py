@@ -1,6 +1,6 @@
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.Utils.TxnDataHandler import TxnDataHandler
-from Modules.Utils.utils import get_random_string
+from modules.base_classes.base_account import BaseAccount
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.utils import get_random_string
 
 false = False
 true = True

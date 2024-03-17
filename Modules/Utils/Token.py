@@ -1,11 +1,13 @@
-from web3 import Web3
 import random
-from Modules.config import get_rpc_list, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, get_general_settings
-from Modules.Utils.Logger import logger
-from Modules.Utils.utils import sleeping_sync, get_random_value, get_random_value_int, req
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.Utils.TxnDataHandler import TxnDataHandler
 from time import sleep
+
+from web3 import Web3
+
+from modules.config import get_rpc_list, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, get_general_settings
+from modules.utils.Logger import logger
+from modules.utils.utils import sleeping_sync, get_random_value, get_random_value_int, req
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.base_classes.base_account import BaseAccount
 
 
 class Token():

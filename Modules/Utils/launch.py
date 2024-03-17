@@ -2,14 +2,16 @@
 import sys, os
 import traceback
 from platform import system
-from Modules.config import SECRETS_PATH, KEY, SETTINGS_PATH, SERVER_DATA
-from cryptography.fernet import Fernet, InvalidToken
 import socket
-from loguru import logger as console_log
 import hashlib
 import getpass
 import json
-from Modules.Utils.Account import Account
+
+from cryptography.fernet import Fernet, InvalidToken
+from loguru import logger as console_log
+
+from modules.config import SECRETS_PATH, KEY, SETTINGS_PATH, SERVER_DATA
+from modules.utils.account import Account
 
 PLATFORM = system()
 if PLATFORM == "Windows":

@@ -1,9 +1,9 @@
 import requests
 
-from Modules.Utils.Account import Account
-from Modules.Utils.Logger import logger
-from Modules.Utils.TxnDataHandler import TxnDataHandler
-from Modules.Utils.utils import sleeping_sync
+from modules.utils.account import Account
+from modules.utils.Logger import logger
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.utils import sleeping_sync
 
 class RouterNitro:
 

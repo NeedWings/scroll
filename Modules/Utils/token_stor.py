@@ -1,4 +1,4 @@
-from Modules.Utils.Token import Token, NativeToken
+from modules.utils.token import Token, NativeToken
 
 
 

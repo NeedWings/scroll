@@ -1,7 +1,7 @@
-from Modules.Utils.utils import req
-from Modules.Utils.TxnDataHandler import TxnDataHandler
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.Utils.Logger import logger
+from modules.base_classes.base_account import BaseAccount
+from modules.utils.utils import req
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.Logger import logger
 
 class Owlto:
     supported_nets = ["ethereum", "arbitrum", "zksync", "base", "optimism", "linea"]

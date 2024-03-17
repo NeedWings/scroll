@@ -18,11 +18,11 @@ from Crypto.Hash import keccak as kkeccak
 from eth_keys import keys
 import requests
 
-from Modules.rhino_utils.fast_pedersen_hash import EC_ORDER, private_to_stark_key, sign, hashMsg
-from Modules.Utils.TxnDataHandler import TxnDataHandler
-from Modules.Utils.Account import Account
-from Modules.Utils.Logger import logger
-from Modules.Utils.utils import sleeping_sync
+from modules.rhino_utils.fast_pedersen_hash import EC_ORDER, private_to_stark_key, sign, hashMsg
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.account import Account
+from modules.utils.Logger import logger
+from modules.utils.utils import sleeping_sync
 
 class Rhino:
     contracts = {
@@ -517,7 +517,104 @@ class Rhino:
 
         return r.json()
 
-    #def withdraw_from_rhino(self):
+    def get_rhino_balance(self, auth_token: str):
+        while True:
+            try:
+                r = requests.post("https://api.rhino.fi/v1/trading/r/getBalance", json={}, headers={"Authorization": auth_token})
+                data = r.json()
+                for token_data in data:
+                    if token_data["token"] == "ETH":
+                        return int(token_data["available"])
+                return 0
+            except Exception as e:
+                logger.error(f"[{self.account.address}] can't get rhino balance: {e}")
+                sleeping_sync(self.account.address, True)
+
+
+    def withdraw_from_rhino(self):
+        authNonce, signature = self.generate_auth()
+        auth = json.dumps({"signature": signature, "nonce": authNonce}).replace(" ", "")
+        auth = "EcRecover " + base64.b64encode(auth.encode()).decode()
+        registered = self.get_user_data(auth)["isRegistered"]
+        if not registered:
+            c = -1
+            sc = 500
+            while c != 5 and (sc == 500 or sc == 422):
+                authNonce, signature = self.generate_auth()
+                c+=1
+                sc = self.register(authNonce, signature)
+                if sc == 500 or sc == 422:
+                    logger.error(f"[{self.account.address}] failed to registrer on rhino. trying again")
+                    sleeping_sync(self.account.address, True)
+            
+            if c == 5:
+                logger.info(f"[{self.account.address}] can't registrer on rhino. End.")
+                return
+            else:
+                logger.success(f"[{self.account.address}] registered successfully")
+            auth = json.dumps({"signature": signature, "nonce": authNonce}).replace(" ", "")
+            auth = "EcRecover " + base64.b64encode(auth.encode()).decode()
+            starkVaultId = self.get_eth_info(auth)
+        else:
+            logger.info(f"[{self.account.address}] recovering trading key")
+            
+            dtk = self.recover_trading_key(auth)
+            self.set_key_pair(dtk)
+            try:
+                starkVaultId = self.get_user_data(auth)["tokenRegistry"]["ETH"]["starkVaultId"]
+            except:
+                starkVaultId = self.get_eth_info(auth)
+
+
+        balance = self.get_rhino_balance(auth) 
+        if balance == 0:
+            logger.info(f"[{self.account.address}] rhino balance is 0")
+            return
+        logger.info(f"[{self.account.address}] rhino balance is {balance/100000000}")
+        url = "https://api.rhino.fi/v1/trading/r/vaultIdAndStarkKey?token=ETH&targetEthAddress=0xaf8ae6955d07776ab690e565ba6fbc79b8de3a5d"
+        c = 0
+        while True:
+            try:
+                r = requests.get(url, headers={
+                    "authorization": auth
+                })
+                vaultId = r.json()["vaultId"]
+                starkKey = r.json()["starkKey"]
+                break
+            except:
+                logger.error(f"[{self.account.address}] failed to get data, trying again")
+            c+=1
+            if c == 10:
+                logger.error(f"[{self.account.address}] to many attemts. end.")
+                return
+        tx = self.createTransferPayload(
+            starkKey,
+            vaultId,
+            {
+                "starkVaultId": starkVaultId,
+                "starkTokenId": "0xb333e3142fe16b78628f19bb15afddaef437e72d6d7f5c6c20c6801a27fba6"
+            },
+            int(balance)
+        )
+        print(tx)
+        r = requests.post("https://api.rhino.fi/v1/trading/bridgedWithdrawals",
+                           json={
+                               "amount": str(balance),
+                               "chain": "SCROLL",
+                               "isBridge": True,
+                               "nonce": random.randint(0, 9007199254740991),
+                               "recipientEthAddress": self.account.address,
+                               "token": "ETH",
+                               "tx": tx
+                               
+                           }, headers={
+                    "authorization": auth
+                })
+        print(r.text)
+        logger.success(f"[{self.account.address}] withdraw requests sent! Resp: {r.text}")
+
+
+        
 
 
     def bridge_to_scroll(self, amount, net):

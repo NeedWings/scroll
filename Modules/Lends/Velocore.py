@@ -1,11 +1,11 @@
-from Modules.BaseClasses.BaseDeFi import BaseLend
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.Utils.Token import Token
-from Modules.Utils.token_stor import eth
-from Modules.Utils.TxnDataHandler import TxnDataHandler
-from Modules.Utils.utils import sleeping_sync
-from Modules.Utils.Logger import logger
-from Modules.config import get_slippage
+from modules.base_classes.base_defi import BaseLend
+from modules.base_classes.base_account import BaseAccount
+from modules.utils.token import Token
+from modules.utils.token_stor import eth
+from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.utils import sleeping_sync
+from modules.utils.Logger import logger
+from modules.config import get_slippage
 
 
 class Velocore(BaseLend):

@@ -1,6 +1,8 @@
-from loguru import logger as console_log
-from Modules.config import SETTINGS_PATH
 import json
+
+from loguru import logger as console_log
+
+from modules.config import SETTINGS_PATH
 
 global_log = ""
 indexes = []

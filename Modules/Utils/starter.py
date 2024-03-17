@@ -7,11 +7,11 @@ import multiprocessing.popen_spawn_win32 as forking
 import os
 import sys
 
-from Modules.config import accounts, get_general_settings, SETTINGS_PATH
-from Modules.Utils.Account import Account
-from Modules.Utils.utils import get_random_value_int
-from Modules.TasksHandlers.MainRouter import MainRouter
-from Modules.TasksHandlers.OwnTasksRouter import OwnTasks
+from modules.config import accounts, get_general_settings, SETTINGS_PATH
+from modules.utils.account import Account
+from modules.utils.utils import get_random_value_int
+from modules.tasks_handlers.main_router import MainRouter
+from modules.tasks_handlers.own_tasks_router import OwnTasks
 
 
 class _Popen(forking.Popen):

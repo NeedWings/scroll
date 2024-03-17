@@ -1,14 +1,16 @@
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.config import get_rpc_list, get_general_settings
-from Modules.Utils.Logger import logger
-from Modules.Utils.utils import sleeping_sync
-from Modules.Utils.Token import Token
-import json
-from eth_account import Account as ethAccount
-from web3 import Web3
-import random
-import time
 from time import sleep
+import time
+import random
+import json
+
+from web3 import Web3
+from eth_account import Account as ethAccount
+
+from modules.base_classes.base_account import BaseAccount
+from modules.config import get_rpc_list, get_general_settings
+from modules.utils.Logger import logger
+from modules.utils.utils import sleeping_sync
+from modules.utils.token import Token
 
 class Account(BaseAccount):
     w3 = {}
@@ -24,9 +26,6 @@ class Account(BaseAccount):
 
     def __str__(self) -> str:
         return f"private key: {self.private_key}\naddress: {self.address}\nis_active: {self.active}\nproxy: {self.proxies}\t{self.proxy}\nw3: {self.w3}"
-
-    def is_active(self):
-        return self.active
 
     def set_proxy(self, proxy):
         if proxy == "-" or proxy is None:
@@ -51,12 +50,6 @@ class Account(BaseAccount):
         else:
             for chain in rpc_list:
                 self.w3[chain] =  Web3(Web3.HTTPProvider(rpc_list[chain][0]["address"]))
-
-    def get_w3(self, net_name):
-        return self.w3[net_name]
-
-    def get_address(self):
-        return self.address
     
     def get_balance(self, token: Token):
         return token.balance_of(self.address, w3=self.get_w3(token.net_name))
