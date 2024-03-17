@@ -144,7 +144,6 @@ def check_license():
 
 @app.route("/change_wallets", methods=["POST"])
 def change_wallets():
- 
     try:
         data = request.json
         for wallet in data.keys():
@@ -174,10 +173,6 @@ def start():
         return answer("error", details=error)
     flip_work_status(True, general_settings_path)
 
-    date_time_obj = datetime.datetime.fromtimestamp(int(time()))
-
-    data = {"amount": 0, "success": 0, "fail": 0, "start": date_time_obj.isoformat()}
-    dump_json(logs_path, data)
     return answer()
 
 
@@ -195,7 +190,9 @@ def stop():
 
 @app.route("/check_pass", methods=["POST"])
 def check_pass():
-
+    keys = list(accounts.keys())
+    for i in keys:
+        del accounts[i]
     with open(get_correct_path(getcwd() + "/data/encoded_secrets.txt")) as file:
         data = file.read()
 
@@ -218,7 +215,6 @@ def check_pass():
                     accounts[address] = account
                 except:
                     pass
-        
         if isinstance(wallets, str):
             return answer(False, msg=wallets, change_status=False)
 

@@ -343,6 +343,9 @@ class BridgeRouter:
 
         logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
 
+    def withdraw_from_rhino(self):
+        self.rhino_handler.withdraw_from_rhino()
+
     def bridge(self, bridge_type):
         if bridge_type == OWLTO_BRIDGE:
             self.owlto_bridge()

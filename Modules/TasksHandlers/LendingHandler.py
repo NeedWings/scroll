@@ -1,5 +1,4 @@
-from Modules.Lends.LineaBank import LineaBank
-from Modules.Lends.Velocore import Velocore
+from Modules.Lends.layer_bank import LayerBank
 from Modules.config import get_general_settings, get_launch_settings
 from Modules.BaseClasses.BaseAccount import BaseAccount
 from Modules.BaseClasses.BaseDeFi import BaseLend
@@ -16,8 +15,7 @@ from Modules.Utils.TokenChecker import token_checker
 class LendingHandler:
     def __init__(self, account: BaseAccount) -> None:
         
-        self.linea_bank = LineaBank()
-        self.velocore = Velocore()
+        self.linea_bank = LayerBank()
 
         self.LAUNCH_SETTINGS = get_launch_settings()
         self.GENERAL_SETTINGS = get_general_settings()

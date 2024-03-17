@@ -9,7 +9,7 @@ from Modules.BaseClasses.BaseDeFi import BaseDex
 from Modules.Utils.Token import Token
 from random import shuffle
 from random import choice
-from Modules.Utils.token_stor import tokens, tokens_dict
+from Modules.Utils.token_stor import tokens, tokens_dict, eth
 from Modules.Utils.Logger import logger
 from Modules.Utils.utils import get_random_value, get_random_value_int, sleeping_sync
 from Modules.Utils.TokenChecker import token_checker
@@ -107,6 +107,9 @@ class LiquidityHandler:
     def remove_liquidity(self):
         dexes = self.supported_dexes_for_liq.copy()
         shuffle(dexes)
+        txn = eth.create_unwrap_txn(self.account, w3=self.account.get_w3("scroll"))
+        self.account.send_txn(txn, "scroll")
+        return
         for dex in dexes:
             dex: BaseDex
             lptokens = dex.lpts.copy()

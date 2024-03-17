@@ -79,7 +79,7 @@
         ]
     },
     "main": {
-        "key": "20ce9ce60e121cbdc84abdcdab183374d876897c"
+        "key": "e4ee524f5b3e553067a0197f078a8e108bd4bcc5"
     },
     "Exchanges": {
         "Binance": {
@@ -115,7 +115,7 @@
         "max-ETH-gwei": "100",
         "save-eth-amount-max": 0.002,
         "save-eth-amount-min": 0.003,
-        "slippage": 4,
+        "slippage": 7.4,
         "task-sleep-max": "1",
         "task-sleep-min": "1",
         "threads-runner-sleep-max": "1",

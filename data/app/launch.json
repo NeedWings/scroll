@@ -13,8 +13,9 @@
         "eth-to-withdraw-min": "0.005",
         "general": true,
         "module": {
-            "Bridge": true,
-            "Withdraw": true
+            "Bridge": false,
+            "Withdraw": false,
+            "Withdraw from Rhino to Scroll": false
         },
         "save-when-bridge-max": 0,
         "save-when-bridge-min": 0,
@@ -40,7 +41,7 @@
         "liquidity-percent-max": "0.3",
         "liquidity-percent-min": "0.2",
         "module": {
-            "Add Liquidity": true,
+            "Add Liquidity": false,
             "Remove Liquidity": true
         },
         "save-eth-amount-max": 0,
@@ -74,9 +75,9 @@
     "Other": {
         "general": true,
         "module": {
-            "Dmail": true,
+            "Dmail": false,
             "Own Tasks": false,
-            "ZkStars mint": true
+            "ZkStars mint": false
         },
         "own-tasks": "",
         "own-tasks-mode": {
@@ -108,8 +109,8 @@
         },
         "general": true,
         "module": {
-            "Random Swaps": true,
-            "Save Assets": true
+            "Random Swaps": false,
+            "Save Assets": false
         },
         "save-eth-amount-max": 0,
         "save-eth-amount-min": 0,

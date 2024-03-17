@@ -21,7 +21,7 @@ class Token():
         if w3:
             self.w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         while True:
             try:
@@ -36,7 +36,7 @@ class Token():
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         for i in range(5):
             try:
@@ -104,7 +104,7 @@ class Token():
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
         
         contract = w3.eth.contract(self.contract_address, abi=ABI)
 
@@ -130,7 +130,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:
@@ -150,13 +150,12 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
 
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
         
-        amount = self.balance_of(sender.get_address(), w3=w3)[0]
-               
+        amount = self.balance_of(sender.get_address(), of_wrapped=True, w3=w3)[0]
         if amount <= 1:
             return None
         txn = contract.functions.withdraw(
@@ -168,7 +167,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
 
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
@@ -187,7 +186,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net_name][0]["address"]))
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:

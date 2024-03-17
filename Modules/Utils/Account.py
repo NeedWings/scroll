@@ -15,6 +15,9 @@ class Account(BaseAccount):
     proxies = None
     
     def __init__(self, private_key: str, proxy = None):
+        if proxy is not None and proxy != "-":
+            prev = proxy.split(":")
+            proxy = f"http://{prev[2]}:{prev[3]}@{prev[0]}:{prev[1]}"
         self.private_key = private_key
         self.address = ethAccount.from_key(private_key).address
         self.formatted_hex_address = self.address
@@ -30,7 +33,11 @@ class Account(BaseAccount):
 
     def set_proxy(self, proxy):
         if proxy == "-" or proxy is None:
+            self.proxy = proxy
             return
+        prev = proxy.split(":")
+        proxy = f"http://{prev[2]}:{prev[3]}@{prev[0]}:{prev[1]}"
+        self.proxy = proxy
         self.setup_w3(proxy)
 
     def setup_w3(self, proxy=None):

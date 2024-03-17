@@ -33,6 +33,9 @@ class MainRouter:
                 selected.remove("Rhino")
             bridge_router = BridgeRouter(self.account)
             bridge_router.bridge(bridge_router.withdraw_consts[choice(selected)])
+        elif self.task_number == 5 :
+            bridge_router = BridgeRouter(self.account)
+            bridge_router.withdraw_from_rhino()
         elif self.task_number == 3:
             swap_handler = SwapsHandler(self.account)
             swap_handler.save_assets(choice(param_to_list_selected(self.LAUNCH_SETTINGS["Swaps"]["SaveAssets"])))

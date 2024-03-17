@@ -1,9 +1,12 @@
 import json
+import datetime
+from time import time
 import traceback
 from threading import Thread
 from multiprocessing import Event
 import multiprocessing
 import multiprocessing.popen_spawn_win32 as forking
+from random import shuffle
 import os
 import sys
 
@@ -56,7 +59,8 @@ class Starter:
         "Dmail": 12,
         "Random Swaps": 21,
         "Save Assets": 3,
-        "ZkStars mint": 27
+        "ZkStars mint": 27,
+        "Withdraw from Rhino to Scroll": 5
     }
 
     running_threads: Process = None
@@ -81,9 +85,6 @@ class Starter:
         
 
     def start(self, json_data, gas_lock):
-
-        
-
         is_own_tasks = json_data["Other"]["module"]["Own Tasks"]
         if is_own_tasks:
             try:
@@ -107,10 +108,12 @@ class Starter:
     
     def get_selected_acounts(self):
         res = []
+        print(accounts)
         for address in accounts:
             account: Account = accounts[address]
             if account.is_active():
                 res.append(account)
+        shuffle(res)
         return res
     
     def run_own_tasks(self, own_tasks, mode, gas_lock):
@@ -118,10 +121,12 @@ class Starter:
         with open(f"{SETTINGS_PATH}logs.json") as f:
             init_log = json.load(f)
         init_log["amount"] = len(selected_accounts)
+        init_log["start"] = datetime.datetime.fromtimestamp(int(time())).isoformat()
+        init_log["success"] = 0
+        init_log["fail"] = 0
         with open(f"{SETTINGS_PATH}logs.json", "w") as f:
             json.dump(init_log, f, indent=1)
 
-            
         p = Process(target=self.run_tasks, args=(own_tasks, mode, selected_accounts))
         p.start()
         self.running_threads = p
