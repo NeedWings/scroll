@@ -1,4 +1,4 @@
-from Modules.rhino_utils.CONSTANT_POINTS import CONSTANT_POINTS
+from modules.rhino_utils.CONSTANT_POINTS import CONSTANT_POINTS
 import functools
 from ecdsa.rfc6979 import generate_k
 import hashlib

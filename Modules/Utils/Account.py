@@ -55,7 +55,7 @@ class Account(BaseAccount):
     def wait_for_better_eth_gwei(self):
         w3 = self.w3["ethereum"]
         while True:
-            max_gas = Web3.to_wei(SETTINGS["GWEI"]["ethereum"], 'gwei')
+            max_gas = Web3.to_wei(SETTINGS["MaxEthGwei"], 'gwei')
             try:
                 gas_price = w3.eth.gas_price
                 if gas_price > max_gas:

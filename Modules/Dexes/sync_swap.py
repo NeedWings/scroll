@@ -1296,7 +1296,7 @@ class SyncSwap(BaseDex):
                     'owner': sender.get_address(),
                     'spender': self.contract_address,
                     'value': INF_VALUE,
-                    'nonce': 0,
+                    'nonce': token_nonce,
                     'deadline': deadline
                 	},
                 }

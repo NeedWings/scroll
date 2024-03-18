@@ -19,8 +19,8 @@ class LayerBank(BaseLend):
     ]
 
     supply_coeffs = {
-        "ETH": 0.7,
-        "USDC": 0.8
+        "lETH": 0.7,
+        "lUSDC": 0.8
     }
 
     coeffs_from_contract = {
@@ -128,12 +128,12 @@ class LayerBank(BaseLend):
     def how_many_can_borrow(self, sender: BaseAccount):
         total_supplied = self.get_total_supplied(sender)
         total_borrowed = self.get_total_borrowed(sender)
-        return int((total_supplied-total_borrowed)*0.99)
+        return int((total_supplied-total_borrowed)*0.97)
     
     def how_many_can_remove(self, token: Token, sender: BaseAccount):
         total_supplied = self.get_total_supplied(sender)
         total_borrowed = self.get_total_borrowed(sender)
-        return int((total_supplied-total_borrowed)*0.999/self.supply_coeffs[token.symbol])
+        return int((total_supplied-total_borrowed)*0.997/self.supply_coeffs[token.symbol])
 
     def create_txn_for_adding_token(self, token: Token, amount: float, sender: BaseAccount):
         w3 = sender.get_w3("scroll")

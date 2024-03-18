@@ -21,7 +21,7 @@ class LendingHandler:
         self.lends = [self.layer_bank]
         self.supported_dexes_for_lend = []
 
-        for name in self.SETTINGS["Lendings"]:
+        for name in SETTINGS["Lendings"]:
             for lend in self.lends:
                 if lend.name == name:
                     self.supported_dexes_for_lend.append(lend)
@@ -42,6 +42,8 @@ class LendingHandler:
                 token, usd_value = token_checker.get_max_valued_token(self.account, self.supported_tokens_str_to_token(lend.supported_tokens))
                 balance, human_balance = self.account.get_balance(token)
                 availible_balance = human_balance
+                if token.symbol == "ETH":
+                    availible_balance -= get_random_value(SETTINGS["Save Eth Amount"])
 
                 if availible_balance > 0:
                     add_amount = availible_balance * get_random_value(SETTINGS["Add To Lend Percent"])

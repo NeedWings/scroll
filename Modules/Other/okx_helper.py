@@ -9,7 +9,7 @@ import ccxt
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.Logger import logger
 from modules.utils.txn_data_handler import TxnDataHandler
-from modules.utils.utils import sleeping_sync, get_random_value, get_pair_for_address_from_file, param_to_list_selected
+from modules.utils.utils import sleeping_sync, get_random_value, get_pair_for_address_from_file
 from modules.utils.token_stor import nets_eth
 from modules.config import SETTINGS
 
@@ -145,7 +145,7 @@ class OKXHelper:
                 sleeping_sync(self.account.address, True)
             if res:
                 break
-        logger.info(f"[{self.account.address}] waiting {SETTINGS["Wait For Deposit"]} minutes")
+        logger.info(f"[{self.account.address}] waiting {SETTINGS['Wait For Deposit']} minutes")
         sleep(SETTINGS["Wait For Deposit"]*60)
         self.transfer_to_main_account()
 

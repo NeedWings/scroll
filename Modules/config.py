@@ -12,7 +12,7 @@ ABI = [{"anonymous":False,"inputs":[{"indexed":True,"internalType":"address","na
 RPC_LIST = SETTINGS["RPC"]
 
 def get_slippage():
-    return 1 - float(SETTINGS["slippage"])/100
+    return 1 - float(SETTINGS["slippage"])
 
 NATIVE_TOKENS_SYMBOLS = {
      "zkevm": "ETH",

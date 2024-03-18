@@ -89,22 +89,17 @@ class Starter:
             except:
                 return "Json error, check own-tasks"
             mode = SETTINGS["own tasks mode"]
-            self.run_own_tasks(own_tasks, mode, gas_lock, ender)
+            self.run_own_tasks(own_tasks, mode, gas_lock, ender, accounts)
         else:
-            tasks = self.task_numbers[module]
-            self.run_own_tasks(tasks, "standart", gas_lock, ender)
+            tasks = [self.task_numbers[module]]
+            self.run_own_tasks(tasks, "standart", gas_lock, ender, accounts)
         return None
     
-    def run_own_tasks(self, own_tasks, mode, gas_lock, ender):
-        selected_accounts = self.get_selected_acounts()
-        with open(f"{SETTINGS_PATH}logs.json") as f:
-            init_log = json.load(f)
-        init_log["amount"] = len(selected_accounts)
-        with open(f"{SETTINGS_PATH}logs.json", "w") as f:
-            json.dump(init_log, f, indent=1)
+    def run_own_tasks(self, own_tasks, mode, gas_lock, ender, accounts):
+
 
             
-        p = Process(target=self.run_tasks, args=(own_tasks, mode, selected_accounts, gas_lock, ender))
+        p = Process(target=self.run_tasks, args=(own_tasks, mode, accounts, gas_lock, ender))
         p.start()
         self.running_threads = p
 
