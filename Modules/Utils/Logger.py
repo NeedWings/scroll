@@ -1,4 +1,4 @@
-import json
+import datetime
 
 from loguru import logger as console_log
 
@@ -6,19 +6,24 @@ from modules.config import SETTINGS_PATH
 
 global_log = ""
 indexes = []
-def write_global_log():
-    global global_log
-    print(global_log)
-    print(f"{SETTINGS_PATH}logs.txt")
-    with open(f"{SETTINGS_PATH}logs.txt", "w") as f:
-        f.write(global_log)
+date_and_time = str(datetime.datetime.now()).replace(":", ".")
 
-write_global_log()
+def write_global_log():
+    log = ""
+
+    for key in global_log:
+        buff = f"{key}:\n"
+
+        for data in global_log[key]:
+            buff += f"{data}\n" 
+            
+        log += buff + "\n"
+    with open(f"{SETTINGS_PATH}logs/log_{date_and_time}.txt", "w") as f:
+        f.write(log)
 
 class logger():
     @staticmethod
     def info(message: str):
-        global global_log
         try:
             addr = message.split("]")[0][1::]
 
@@ -27,22 +32,23 @@ class logger():
 
             console_log.info(f"[{addr}] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}")
 
-        except Exception as e:
-            print(e)
+            if addr not in list(global_log.keys()):
+                global_log[addr] = [f"[INFO] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}"]
+            else:
+                global_log[addr].append(f"[INFO] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}")
+
+            write_global_log()
+        except:
+            pass
     
     @staticmethod
     def error(message: str):
-        global global_log
         try:
             addr = message.split("]")[0][1::]
 
             if addr not in indexes:
                 indexes.append(addr)
-            with open(f"{SETTINGS_PATH}logs.json") as f:
-                init_log = json.load(f)
-            init_log["fail"] += 1
-            with open(f"{SETTINGS_PATH}logs.json", "w") as f:
-                json.dump(init_log, f, indent=1)
+
             msg = ""
             for i in range(1, len(message.split("]"))):
                 msg += message.split("]")[i]
@@ -51,12 +57,17 @@ class logger():
 
             console_log.error(f"[{addr}] [{indexes.index(addr)+1}/{len(indexes)}] {msg}")
 
-        except Exception as e:
-            print(e)
+            if addr not in list(global_log.keys()):
+                global_log[addr] = [f"[ERROR] [{indexes.index(addr)+1}/{len(indexes)}] {msg}"]
+            else:
+                global_log[addr].append(f"[ERROR] [{indexes.index(addr)+1}/{len(indexes)}] {msg}")
+
+            write_global_log()
+        except:
+            pass
     
     @staticmethod
     def success(message: str):
-        global global_log
         try:
             addr = message.split("]")[0][1::]
 
@@ -64,10 +75,12 @@ class logger():
                 indexes.append(addr)
 
             console_log.success(f"[{addr}] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}")
-            with open(f"{SETTINGS_PATH}logs.json") as f:
-                init_log = json.load(f)
-            init_log["success"] += 1
-            with open(f"{SETTINGS_PATH}logs.json", "w") as f:
-                json.dump(init_log, f, indent=1)
-        except Exception as e:
-            print(e)
+
+            if addr not in list(global_log.keys()):
+                global_log[addr] = [f"[SUCCESS] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}"]
+            else:
+                global_log[addr].append(f"[SUCCESS] [{indexes.index(addr)+1}/{len(indexes)}] {message.split(']')[1]}")
+
+            write_global_log()
+        except:
+            pass

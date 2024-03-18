@@ -8,7 +8,7 @@ import requests
 from web3 import Web3
 
 from modules.utils.Logger import logger, console_log
-from modules.config import SETTINGS_PATH, get_general_settings
+from modules.config import SETTINGS_PATH, SETTINGS
 
 def get_random_value_int(param):
     return random.randint(int(param[0]), int(param[1]))
@@ -16,17 +16,9 @@ def get_random_value_int(param):
 def get_random_value(param):
     return random.uniform(float(param[0]), float(param[1]))
 
-def param_to_list_selected(param):
-    res = []
-    for i in param:
-        if param[i]:
-            res.append(i)
-    return res
-
 def sleeping_sync(address, error = False):
-    settings = get_general_settings()
-    task_sleep = [int(settings["TimeSleeps"]["task-sleep-min"]), int(settings["TimeSleeps"]["task-sleep-max"])]
-    error_sleeping = [int(settings["TimeSleeps"]["task-sleep-min"]), int(settings["TimeSleeps"]["task-sleep-max"])]
+    task_sleep = SETTINGS["Task Sleep"]
+    error_sleeping = SETTINGS["Error Sleep"]
     if error:
         rand_time = get_random_value_int(error_sleeping)
     else:
@@ -50,7 +42,6 @@ def get_pair_for_address_from_file(filename: str, address: str):
 
 
 def req_post(url: str, **kwargs):
-    settings = get_general_settings()
     while True:
         try:
             resp = requests.post(url, **kwargs)
@@ -62,11 +53,10 @@ def req_post(url: str, **kwargs):
         except Exception as error:
             console_log.error(f"Requests error: {error}")
         
-        time.sleep(get_random_value([settings["TimeSleeps"]["error-sleep-min"], settings["TimeSleeps"]["error-sleep-max"]]))
+        time.sleep(get_random_value(SETTINGS["Error Sleep"]))
 
 
 def req(url: str, **kwargs):
-    settings = get_general_settings()
     while True:
         try:
             resp = requests.get(url, **kwargs)
@@ -77,7 +67,7 @@ def req(url: str, **kwargs):
                 pass
         except Exception as error:
             console_log.error(f"Requests error: {error}")
-        time.sleep(get_random_value([settings["TimeSleeps"]["error-sleep-min"], settings["TimeSleeps"]["error-sleep-max"]]))
+        time.sleep(get_random_value(SETTINGS["Error Sleep"]))
 
 def get_random_string(length: int) -> str:
     letters = string.ascii_lowercase + "1234567890"

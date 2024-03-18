@@ -4,7 +4,7 @@ from modules.dexes.sync_swap import SyncSwap
 from modules.dexes.scroll_swap import ScrollSwap
 from modules.dexes.space_fi import SpaceFi
 from modules.dexes.sky_drome import Skydrome
-from modules.config import get_launch_settings, get_general_settings
+from modules.config import SETTINGS
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseDex
 from modules.utils.token import Token
@@ -18,8 +18,6 @@ from modules.utils.token_checker import token_checker
 class SwapsHandler:
 
     def __init__(self, account: BaseAccount) -> None:
-        self.LAUNCH_SETTINGS = get_launch_settings()
-        self.GENERAL_SETTINGS = get_general_settings()
         self.supported_dexes_for_swap = []
         self.suppotred_tokens = []
         self.scroll = ScrollSwap()
@@ -28,15 +26,15 @@ class SwapsHandler:
         self.sync = SyncSwap()
         self.dexes = [self.scroll, self.space, self.sky, self.sync]
         self.account = account
-        for name in self.LAUNCH_SETTINGS["Swaps"]["Dex"]:
+        for name in SETTINGS["Supported Dexes"]:
             for dex in self.dexes:
-                if dex.name == name and self.LAUNCH_SETTINGS["Swaps"]["Dex"][name]:
+                if dex.name == name:
                     self.supported_dexes_for_swap.append(dex)
-        for name in self.LAUNCH_SETTINGS["Swaps"]["SwapsTokens"]:
+        for name in SETTINGS["SwapsTokens"]:
             if name == "WETH":
                 name = "ETH"
             for token in tokens:
-                if token.symbol == name and self.LAUNCH_SETTINGS["Swaps"]["SwapsTokens"][name]:
+                if token.symbol == name:
                     self.suppotred_tokens.append(token)
 
 
@@ -48,7 +46,7 @@ class SwapsHandler:
         return res
 
     def random_swaps(self):
-        amount = get_random_value_int([self.LAUNCH_SETTINGS["Swaps"]["swap-amounts-min"], self.LAUNCH_SETTINGS["Swaps"]["swaps-amounts-max"]])
+        amount = get_random_value_int(SETTINGS["Swaps Amount"])
         for i in range(amount):
             try:
                 dex: BaseDex = choice(self.supported_dexes_for_swap)
@@ -59,7 +57,7 @@ class SwapsHandler:
                 token1: Token = token1
                 token2: Token = tokens_dict[dex.get_pair_for_token(token1.symbol)]
                 
-                amount_to_swap = usd_value * get_random_value([self.LAUNCH_SETTINGS["Swaps"]["swaps-percent-min"], self.LAUNCH_SETTINGS["Swaps"]["swaps-percent-max"]])
+                amount_to_swap = usd_value * get_random_value(SETTINGS["Swaps Percent"])
                 
                 token1_val = amount_to_swap/token1.get_price()
                 token2_val = amount_to_swap/token2.get_price()
@@ -89,7 +87,7 @@ class SwapsHandler:
                 balance = self.account.get_balance(token_to_swap)[0]
 
                 if token_to_swap.symbol == "ETH":
-                    balance -= int(get_random_value([self.GENERAL_SETTINGS["TimeSleeps"]["save-eth-amount-min"], self.GENERAL_SETTINGS["TimeSleeps"]["save-eth-amount-max"]])*1e18)
+                    balance -= int(get_random_value(SETTINGS["Save Eth Amount"])*1e18)
 
                 if balance <= 0:
                     logger.info(f"[{self.account.get_address()}] {token_to_swap.symbol} balance 0 or less MinTokensBalances. skip")

@@ -1,13 +1,12 @@
 from time import sleep
 import time
-import random
-import json
+from random import choice
 
 from web3 import Web3
 from eth_account import Account as ethAccount
 
 from modules.base_classes.base_account import BaseAccount
-from modules.config import get_rpc_list, get_general_settings
+from modules.config import RPC_LIST, SETTINGS
 from modules.utils.Logger import logger
 from modules.utils.utils import sleeping_sync
 from modules.utils.token import Token
@@ -33,7 +32,6 @@ class Account(BaseAccount):
         self.setup_w3(proxy)
 
     def setup_w3(self, proxy=None):
-        rpc_list = get_rpc_list()
         if proxy == "-":
             proxy = None
         if proxy:
@@ -45,11 +43,11 @@ class Account(BaseAccount):
                 "timeout": 10
             }
             self.proxies = req_proxy["proxies"]
-            for chain in rpc_list:
-                self.w3[chain] =  Web3(Web3.HTTPProvider(rpc_list[chain][0]["address"], request_kwargs=req_proxy))
+            for chain in RPC_LIST:
+                self.w3[chain] =  Web3(Web3.HTTPProvider(choice(RPC_LIST[chain]), request_kwargs=req_proxy))
         else:
-            for chain in rpc_list:
-                self.w3[chain] =  Web3(Web3.HTTPProvider(rpc_list[chain][0]["address"]))
+            for chain in RPC_LIST:
+                self.w3[chain] =  Web3(Web3.HTTPProvider(choice(RPC_LIST[chain])))
     
     def get_balance(self, token: Token):
         return token.balance_of(self.address, w3=self.get_w3(token.net_name))
@@ -57,7 +55,7 @@ class Account(BaseAccount):
     def wait_for_better_eth_gwei(self):
         w3 = self.w3["ethereum"]
         while True:
-            max_gas = Web3.to_wei(float(get_general_settings()["TimeSleeps"]["max-ETH-gwei"]), 'gwei')
+            max_gas = Web3.to_wei(SETTINGS["GWEI"]["ethereum"], 'gwei')
             try:
                 gas_price = w3.eth.gas_price
                 if gas_price > max_gas:

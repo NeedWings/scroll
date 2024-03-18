@@ -5,7 +5,7 @@ from modules.utils.token import Token
 from modules.utils.token_stor import nets_eth, nets_stables, nets_weth
 from modules.utils.Logger import logger
 from modules.utils.utils import get_random_value, get_random_value_int
-from modules.config import get_general_settings
+from modules.config import SETTINGS
 
 class TokenChecker:
     def get_max_valued_token(self, sender: BaseAccount, tokens: List[Token]):
@@ -15,7 +15,7 @@ class TokenChecker:
             balance = sender.get_balance(token)[0]
             print(balance)
             if token.symbol == "ETH":
-                balance = balance - get_random_value([get_general_settings()["TimeSleeps"]["save-eth-amount-min"], get_general_settings()["TimeSleeps"]["save-eth-amount-max"]])*1e18
+                balance = balance - get_random_value(SETTINGS["Save Eth Amount"])*1e18
                 logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")
             else:
                 logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")

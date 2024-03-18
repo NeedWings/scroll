@@ -8,10 +8,9 @@ from modules.tasks_handlers.other_handler import OtherHandler
 from modules.tasks_handlers.swaps_handler import SwapsHandler
 from modules.tasks_handlers.own_tasks_router import OwnTasks
 from modules.other.okx_helper import OKXHelper
-from modules.bridges.bridge_router import BridgeRouter, OWLTO_BRIDGE, OWLTO_WITHDRAW, ORBITER_BRIDGE, ORBITER_WITHDRAW, RHINO_BRIDGE
+from modules.bridges.bridge_router import BridgeRouter
 from modules.utils.account import Account
-from modules.utils.utils import param_to_list_selected
-from modules.config import get_general_settings, get_launch_settings
+from modules.config import SETTINGS
 
 
 class MainRouter:
@@ -20,26 +19,24 @@ class MainRouter:
         self.account = account
         self.account.setup_w3(self.account.proxy)
         self.task_number = task_number
-        self.LAUNCH_SETTINGS = get_launch_settings()
-        self.GENERAL_SETTINGS = get_general_settings()
 
     def start(self):
         if self.task_number == 1:
-            selected =  param_to_list_selected(get_launch_settings()["Bridges"]["BridgeType"])
+            selected = choice(SETTINGS["Bridge Type"])
             bridge_router = BridgeRouter(self.account)
-            bridge_router.bridge(bridge_router.bridge_consts[choice(selected)])
+            bridge_router.bridge(bridge_router.bridge_consts[selected])
         elif self.task_number == 2:
-            selected =  param_to_list_selected(get_launch_settings()["Bridges"]["BridgeType"])
+            selected = choice(SETTINGS["Bridge Type"])
             if "Rhino" in selected:
                 selected.remove("Rhino")
             bridge_router = BridgeRouter(self.account)
-            bridge_router.bridge(bridge_router.withdraw_consts[choice(selected)])
+            bridge_router.bridge(bridge_router.withdraw_consts[selected])
         elif self.task_number == 5 :
             bridge_router = BridgeRouter(self.account)
             bridge_router.withdraw_from_rhino()
         elif self.task_number == 3:
             swap_handler = SwapsHandler(self.account)
-            swap_handler.save_assets(choice(param_to_list_selected(self.LAUNCH_SETTINGS["Swaps"]["SaveAssets"])))
+            swap_handler.save_assets(choice(SETTINGS["To Save Funds"]))
         elif self.task_number == 4:
             liquidity_handler = LiquidityHandler(self.account)
             liquidity_handler.add_liquidity()
@@ -53,15 +50,15 @@ class MainRouter:
             other_handler = OtherHandler(self.account)
             other_handler.zkstars()
         elif self.task_number == 201:
-            api_key = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["key"]
-            secret = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["Secret"]
-            password = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["Password"]
+            api_key = SETTINGS["OKX key"]
+            secret = SETTINGS["OKX Secret"]
+            password = SETTINGS["OKX Password"]
             okx_helper = OKXHelper(api_key, secret, password, self.account)
             okx_helper.withdraw_handl()
         elif self.task_number == 202:
-            api_key = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["key"]
-            secret = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["Secret"]
-            password = self.GENERAL_SETTINGS["Exchanges"]["OKX"]["Password"]
+            api_key = SETTINGS["OKX key"]
+            secret = SETTINGS["OKX Secret"]
+            password = SETTINGS["OKX Password"]
             okx_helper = OKXHelper(api_key, secret, password, self.account)
             okx_helper.deposit_handl()
         elif self.task_number == 21:

@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
-from Modules.config import get_launch_settings
-from Modules.Utils.utils import param_to_list_selected
-from Modules.Utils.Token import Token
-from Modules.BaseClasses.BaseAccount import BaseAccount
-from Modules.Utils.Logger import logger
 import random
+
+from modules.base_classes.base_account import BaseAccount
+from modules.utils.token import Token
+from modules.utils.Logger import logger
+from modules.config import SETTINGS
 
 class BaseDex(ABC):
     name = None
@@ -13,9 +13,8 @@ class BaseDex(ABC):
     contract_address_lp = None
     def __init__(self) -> None:
         new_supported_tokens = []
-        settings = get_launch_settings()
-        selected_tokens = param_to_list_selected(settings["Swaps"]["SwapsTokens"])
-        print(selected_tokens)
+
+        selected_tokens = SETTINGS["SwapsTokens"]
         for token in self.supported_tokens:
             if token in selected_tokens or ("WETH" in selected_tokens and token == "ETH"):
                 new_supported_tokens.append(token)
@@ -50,8 +49,7 @@ class BaseLend(ABC):
 
     def __init__(self) -> None:
         new_supported_tokens = []
-        settings = get_launch_settings()
-        selected_tokens = param_to_list_selected(settings["Lendings"]["LendTokens"])
+        selected_tokens = SETTINGS["LendTokens"]
         for token in self.supported_tokens:
             if token in selected_tokens or ("WETH" in selected_tokens and token == "ETH"):
                 new_supported_tokens.append(token)

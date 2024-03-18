@@ -9,9 +9,9 @@ import ccxt
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.Logger import logger
 from modules.utils.txn_data_handler import TxnDataHandler
-from modules.utils.utils import sleeping_sync, get_random_value, get_random_value_int, get_pair_for_address_from_file, param_to_list_selected
+from modules.utils.utils import sleeping_sync, get_random_value, get_pair_for_address_from_file, param_to_list_selected
 from modules.utils.token_stor import nets_eth
-from modules.config import get_launch_settings, get_general_settings
+from modules.config import SETTINGS
 
 
 
@@ -31,8 +31,6 @@ class OKXHelper:
         "linea": 0.0002
     }
     def __init__(self, api_key: str, secret: str, password: str, account: BaseAccount) -> None:
-        self.LAUNCH_SETTINGS = get_launch_settings()
-        self.GENERAL_SETTINGS = get_general_settings()
 
         self.okx_account = ccxt.okex5({
             'apiKey': api_key,
@@ -98,12 +96,12 @@ class OKXHelper:
         return False
 
     def withdraw_handl(self):
-        net = choice(param_to_list_selected(self.LAUNCH_SETTINGS["OKX"]["NetsForOKX"]))
+        net = choice(SETTINGS["Nets For OKX"])
         start_balance = self.account.get_balance(nets_eth[net])[1]
         new_balance = start_balance
         res = False
         while not res:
-            to_withdraw = get_random_value([self.LAUNCH_SETTINGS["OKX"]["to-withdraw-from-okx-min"], self.LAUNCH_SETTINGS["OKX"]["to-withdraw-from-okx-max"]])
+            to_withdraw = get_random_value(SETTINGS["To Withdraw From OKX"])
     
             logger.info(f"[{self.account.address}] going to withdraw {to_withdraw} ETH from OKX")
             res = self.withdraw(to_withdraw, net)
@@ -140,21 +138,21 @@ class OKXHelper:
         if not rec:
             logger.error(f"[{self.account.address}] can't find pair. Skip")
             return
-        net = param_to_list_selected(self.LAUNCH_SETTINGS["OKX"]["send-to-okx-from"])[0]
+        net = SETTINGS["Send To OKX From"]
         eth = nets_eth[net]
         new_balance = self.account.get_balance(eth)[1]
         
         res = False
         for i in range(10):
-            to_withdraw = new_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-withdraw-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-withdraw-max"]])
+            to_withdraw = new_balance - get_random_value(SETTINGS["Withdraw Save"])
             logger.info(f"[{self.account.address}] going to send {to_withdraw} ETH to {rec}")
             res = self.deposit(rec, to_withdraw, net)
             if not res:
                 sleeping_sync(self.account.address, True)
             if res:
                 break
-        logger.info(f"[{self.account.address}] waiting {self.LAUNCH_SETTINGS['OKX']['wait-for-okx-deposit']} minutes")
-        sleep(self.LAUNCH_SETTINGS["OKX"]['wait-for-okx-deposit']*60)
+        logger.info(f"[{self.account.address}] waiting {SETTINGS["Wait For Deposit"]} minutes")
+        sleep(SETTINGS["Wait For Deposit"]*60)
         self.transfer_to_main_account()
 
     def transfer_to_main_account(self):

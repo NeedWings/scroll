@@ -1,6 +1,5 @@
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.txn_data_handler import TxnDataHandler
-from modules.utils.utils import get_random_string
 
 false = False
 true = True

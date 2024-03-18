@@ -1,8 +1,8 @@
-import random
+from random import choice
 
 from web3 import Web3
 
-from modules.config import get_rpc_list, get_launch_settings, get_general_settings
+from modules.config import RPC_LIST, SETTINGS
 from modules.utils.Logger import logger
 from modules.utils.utils import sleeping_sync
 
@@ -14,11 +14,11 @@ class TxnDataHandler:
         if w3:
             self.w3 = w3
         else:
-            self.w3 = Web3(Web3.HTTPProvider(get_rpc_list()[net_name][0]["address"]))
+            self.w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[net_name])))
     
     def get_gas_price(self):
         
-        max_gas = Web3.to_wei(float(get_general_settings()["max-gwei"].get(self.net_name)), 'gwei')
+        max_gas = Web3.to_wei(SETTINGS["GWEI"][self.net_name], 'gwei')
 
         while True:
             try:

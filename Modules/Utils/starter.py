@@ -7,7 +7,7 @@ import multiprocessing.popen_spawn_win32 as forking
 import os
 import sys
 
-from modules.config import accounts, get_general_settings, SETTINGS_PATH
+from modules.config import SETTINGS_PATH, SETTINGS
 from modules.utils.account import Account
 from modules.utils.utils import get_random_value_int
 from modules.tasks_handlers.main_router import MainRouter
@@ -56,15 +56,14 @@ class Starter:
         "Dmail": 12,
         "Random Swaps": 21,
         "Save Assets": 3,
-        "ZkStars mint": 27
+        "ZkStars mint": 27,
+        "Withdraw from Rhino to Scroll": 5
     }
 
     running_threads: Process = None
 
-    def run_tasks(self, own_tasks, mode, selected_accounts):
-        gas_lock = Event()
-        settings = get_general_settings()
-        thread_runner_sleep = [int(settings["TimeSleeps"]["threads-runner-sleep-min"]), int(settings["TimeSleeps"]["threads-runner-sleep-max"])]
+    def run_tasks(self, own_tasks, mode, selected_accounts, gas_lock, ender):
+        thread_runner_sleep = SETTINGS["ThreadRunnerSleep"]
         tasks = []
         delay = 0
         for i in range(len(selected_accounts)):
@@ -78,42 +77,25 @@ class Starter:
 
         for i in tasks:
             i.join()
+
+        ender.set()
         
 
-    def start(self, json_data, gas_lock):
-
-        
-
-        is_own_tasks = json_data["Other"]["module"]["Own Tasks"]
+    def start(self, module, gas_lock, accounts, ender):
+        is_own_tasks = module == "Own Tasks"
         if is_own_tasks:
             try:
-                own_tasks = json.loads(json_data["Other"]["own-tasks"])
+                own_tasks = SETTINGS["own tasks"]
             except:
                 return "Json error, check own-tasks"
-            mode = "standart" if json_data["Other"]["own-tasks-mode"]["standart"] else "invert"
-            self.run_own_tasks(own_tasks, mode, gas_lock)
+            mode = SETTINGS["own tasks mode"]
+            self.run_own_tasks(own_tasks, mode, gas_lock, ender)
         else:
-            tasks = self.get_task_numbers(json_data) 
-            self.run_own_tasks(tasks, "standart", gas_lock)
+            tasks = self.task_numbers[module]
+            self.run_own_tasks(tasks, "standart", gas_lock, ender)
         return None
-
-    def get_task_numbers(self, json_data):
-        res = []
-        for page in json_data:
-            for module in json_data[page]['module']:
-                if json_data[page]['module'][module]:
-                    res.append(self.task_numbers[module])
-        return res
     
-    def get_selected_acounts(self):
-        res = []
-        for address in accounts:
-            account: Account = accounts[address]
-            if account.is_active():
-                res.append(account)
-        return res
-    
-    def run_own_tasks(self, own_tasks, mode, gas_lock):
+    def run_own_tasks(self, own_tasks, mode, gas_lock, ender):
         selected_accounts = self.get_selected_acounts()
         with open(f"{SETTINGS_PATH}logs.json") as f:
             init_log = json.load(f)
@@ -122,7 +104,7 @@ class Starter:
             json.dump(init_log, f, indent=1)
 
             
-        p = Process(target=self.run_tasks, args=(own_tasks, mode, selected_accounts))
+        p = Process(target=self.run_tasks, args=(own_tasks, mode, selected_accounts, gas_lock, ender))
         p.start()
         self.running_threads = p
 

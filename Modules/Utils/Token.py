@@ -1,9 +1,9 @@
-import random
+from random import choice
 from time import sleep
 
 from web3 import Web3
 
-from modules.config import get_rpc_list, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, get_general_settings
+from modules.config import RPC_LIST, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, SETTINGS
 from modules.utils.Logger import logger
 from modules.utils.utils import sleeping_sync, get_random_value, get_random_value_int, req
 from modules.utils.txn_data_handler import TxnDataHandler
@@ -23,7 +23,7 @@ class Token():
         if w3:
             self.w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         while True:
             try:
@@ -38,7 +38,7 @@ class Token():
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         for i in range(5):
             try:
@@ -48,7 +48,7 @@ class Token():
                                 )
                 
                 sender.send_txn(txn, self.net_name)
-                t = get_random_value_int([get_general_settings()["TimeSleeps"]["approve-sleep-min"], get_general_settings()["TimeSleeps"]["approve-sleep-max"]])
+                t = get_random_value_int(SETTINGS["Approve Sleep"])
                 logger.info(f"[{sender.get_address()}] sleeping {t} s")
                 sleep(t)
                 return None
@@ -106,7 +106,7 @@ class Token():
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         
         contract = w3.eth.contract(self.contract_address, abi=ABI)
 
@@ -132,7 +132,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:
@@ -152,7 +152,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
 
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
@@ -170,7 +170,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
 
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
@@ -189,7 +189,7 @@ class NativeToken(Token):
         if w3:
             w3 = w3
         else:
-            w3 = Web3(Web3.HTTPProvider(get_rpc_list()[self.net][0]["address"]))
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:
@@ -203,7 +203,7 @@ class NativeToken(Token):
                 
                 sender.send_txn(txn, self.net_name)
 
-                t = get_random_value_int([get_general_settings()["TimeSleeps"]["approve-sleep-min"], get_general_settings()["TimeSleeps"]["approve-sleep-max"]])
+                t = get_random_value_int(SETTINGS["Approve Sleep"])
                 logger.info(f"[{sender.get_address()}] sleeping {t} s")
                 sleep(t)
 

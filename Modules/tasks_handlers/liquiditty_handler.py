@@ -1,18 +1,16 @@
 from random import shuffle, choice
 
-from modules.dexes.sync_swap import SyncSwap
 from modules.dexes.scroll_swap import ScrollSwap
 from modules.dexes.space_fi import SpaceFi
 from modules.dexes.sky_drome import Skydrome
-from modules.dexes.sync_swap import SyncSwap
-from modules.config import get_launch_settings, get_general_settings, get_slippage
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseDex
 from modules.utils.token import Token
-from modules.utils.token_stor import tokens, tokens_dict
+from modules.utils.token_stor import tokens_dict
 from modules.utils.Logger import logger
 from modules.utils.utils import get_random_value, get_random_value_int, sleeping_sync
 from modules.utils.token_checker import token_checker
+from modules.config import SETTINGS, get_slippage
 
 short_names = {
     "EchoDex": 'echo',
@@ -31,14 +29,11 @@ class LiquidityHandler:
         self.liq_dexes = [self.scroll, self.space, self.sky]
 
         self.supported_dexes_for_liq = []
-        
+    
 
-        self.LAUNCH_SETTINGS = get_launch_settings()
-        self.GENERAL_SETTINGS = get_general_settings()
-
-        for name in self.LAUNCH_SETTINGS["Liquidity"]["LiquidityDexes"]:
+        for name in SETTINGS["Liquidity Dexes"]:
             for dex in self.liq_dexes:
-                if dex.name == name and self.LAUNCH_SETTINGS["Liquidity"]["LiquidityDexes"][name]:
+                if dex.name == name:
                     self.supported_dexes_for_liq.append(dex)
         self.account = account
 
@@ -50,7 +45,7 @@ class LiquidityHandler:
         return res
     
     def add_liquidity(self):
-        liq_amount = get_random_value_int([self.LAUNCH_SETTINGS["Liquidity"]["add-liquidity-amounts-min"], self.LAUNCH_SETTINGS["Liquidity"]["add-liquidity-amounts-max"]])
+        liq_amount = get_random_value_int(SETTINGS["Add Liquidity Amount"])
         if liq_amount < 1:
             return
         
@@ -67,7 +62,7 @@ class LiquidityHandler:
                 if token2 == -5:
                     continue
                 token2: Token = tokens_dict[token2]
-                amount_to_add = usd_value * get_random_value([self.LAUNCH_SETTINGS["Liquidity"]["liquidity-percent-min"], self.LAUNCH_SETTINGS["Liquidity"]["liquidity-percent-max"]])/2
+                amount_to_add = usd_value * get_random_value(SETTINGS["Liquidity Work Percent"])/2
                 token2_usd_value = token2.get_usd_value(self.account.get_balance(token2)[1])
                 amount1 = amount_to_add/token1.get_price()
                 amount2 = amount_to_add/token2.get_price()

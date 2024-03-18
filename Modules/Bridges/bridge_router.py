@@ -8,13 +8,12 @@ from modules.bridges.rhino import Rhino
 from modules.bridges.routernitro import RouterNitro
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.token import Token
-from modules.utils.token_stor import eth_ethereum, eth, eth_arbitrum, nets_eth
+from modules.utils.token_stor import eth_ethereum, eth, nets_eth
 from modules.utils.token_checker import token_checker
-from modules.utils.utils import get_random_value, get_random_value_int, sleeping_sync, get_pair_for_address_from_file, param_to_list_selected
+from modules.utils.utils import get_random_value, sleeping_sync
 from modules.utils.Logger import logger
 from modules.tasks_handlers.swaps_handler import SwapsHandler
-from modules.other.okx_helper import OKXHelper
-from modules.config import get_general_settings, get_launch_settings
+from modules.config import SETTINGS
 
 OWLTO_BRIDGE = 1
 ORBITER_BRIDGE = 2
@@ -38,8 +37,6 @@ class BridgeRouter:
     }
 
     def __init__(self, account: BaseAccount) -> None:
-        self.LAUNCH_SETTINGS = get_launch_settings()
-        self.GENERAL_SETTINGS = get_general_settings()
         self.account = account
         self.owlto_handler = Owlto(account)
         self.orbiter_handler = Orbiter(account)
@@ -56,10 +53,10 @@ class BridgeRouter:
 
                 human_balance = value/1e18
 
-                if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
-                    balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
                 else:
-                    balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                    balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
 
                 if balance > 0.002:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
@@ -93,10 +90,10 @@ class BridgeRouter:
 
                 human_balance = value/1e18
 
-                if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
-                    balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
                 else:
-                    balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                    balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
 
                 if balance > 0.002:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
@@ -130,10 +127,10 @@ class BridgeRouter:
 
                 human_balance = value/1e18
 
-                if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
-                    balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
                 else:
-                    balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                    balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
 
                 if balance > 0.002:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
@@ -154,10 +151,11 @@ class BridgeRouter:
 
                     if  human_balance > 0.002:
 
-                        if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
-                            balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                        if SETTINGS["Bridge All Balance"]:
+                            balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
                         else:
-                            balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                            balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
+
                         txn = self.orbiter_handler.bridge_weth_to_linea(balance, net)
                         if txn == -1:
                             return
@@ -209,9 +207,9 @@ class BridgeRouter:
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-withdraw-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-withdraw-max"]])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
-                if self.LAUNCH_SETTINGS["Bridges"]["withdraw-all-balance"]:
+                if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
                     swaps_handler.save_assets("ETH")
                     balance, human_balance = eth.balance_of(self.account.address, w3=w3)
@@ -263,9 +261,9 @@ class BridgeRouter:
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-withdraw-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-withdraw-max"]])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
-                if self.LAUNCH_SETTINGS["Bridges"]["withdraw-all-balance"]:
+                if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
                     swaps_handler.save_assets("ETH")
                     balance, human_balance = eth.balance_of(self.account.address, w3=w3)
@@ -318,11 +316,11 @@ class BridgeRouter:
 
                 human_balance = value/1e18
 
-                if self.LAUNCH_SETTINGS["Bridges"]["bridge-all-balance"]:
-                    balance = human_balance - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
                 else:
-                    balance = get_random_value([self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["eth-to-bridge-max"]]) - get_random_value([self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-min"], self.LAUNCH_SETTINGS["Bridges"]["save-when-bridge-max"]])
-
+                    balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
+                    
                 if balance > 0.005:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
                     
