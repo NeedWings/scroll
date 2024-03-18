@@ -24,12 +24,6 @@ class OKXHelper:
         "linea": "Linea"
     }
 
-    fees = {
-        "arbitrum":  0.0001,
-        "optimism":  0.0001,
-        "zksync": 0.00015,
-        "linea": 0.0002
-    }
     def __init__(self, api_key: str, secret: str, password: str, account: BaseAccount) -> None:
 
         self.okx_account = ccxt.okex5({
@@ -84,7 +78,7 @@ class OKXHelper:
                 tag     = None, 
                 params  = {
                     "network": self.net_names[net],
-                    "fee": self.fees[net],
+                    "fee": SETTINGS["OKX fees"][net],
                     "pwd": self.okx_account.password
                 }
             )
@@ -144,7 +138,7 @@ class OKXHelper:
         
         res = False
         for i in range(10):
-            to_withdraw = new_balance - get_random_value(SETTINGS["Withdraw Save"])
+            to_withdraw = new_balance - get_random_value(SETTINGS["Save In Source Net"])
             logger.info(f"[{self.account.address}] going to send {to_withdraw} ETH to {rec}")
             res = self.deposit(rec, to_withdraw, net)
             if not res:

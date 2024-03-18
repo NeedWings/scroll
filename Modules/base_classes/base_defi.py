@@ -49,7 +49,7 @@ class BaseLend(ABC):
 
     def __init__(self) -> None:
         new_supported_tokens = []
-        selected_tokens = SETTINGS["LendTokens"]
+        selected_tokens = SETTINGS["Lend Tokens"]
         for token in self.supported_tokens:
             if token in selected_tokens or ("WETH" in selected_tokens and token == "ETH"):
                 new_supported_tokens.append(token)

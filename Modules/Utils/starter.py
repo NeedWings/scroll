@@ -63,7 +63,7 @@ class Starter:
     running_threads: Process = None
 
     def run_tasks(self, own_tasks, mode, selected_accounts, gas_lock, ender):
-        thread_runner_sleep = SETTINGS["ThreadRunnerSleep"]
+        thread_runner_sleep = SETTINGS["Thread Runner Sleep"]
         tasks = []
         delay = 0
         for i in range(len(selected_accounts)):

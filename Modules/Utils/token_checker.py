@@ -18,7 +18,11 @@ class TokenChecker:
                 balance = balance - get_random_value(SETTINGS["Save Eth Amount"])*1e18
                 logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")
             else:
-                logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")
+                if balance/10**token.decimals < SETTINGS["Minimal Token Balance"][token.symbol]:
+                    balance = 0
+                    logger.info(f"[{sender.get_address()}] {token.symbol} balance below Minimal Token Balance, will count as 0")
+                else:
+                    logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")
             usd_value = token.get_usd_value(balance/10**token.decimals)
             if usd_value>max_value:
                 max_valued = token

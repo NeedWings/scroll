@@ -49,7 +49,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, ["arbitrum", "optimism", "zksync", "ethereum", "base", "linea"])
+                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "ethereum", "base", "linea"])
 
                 human_balance = value/1e18
 
@@ -86,7 +86,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, ["arbitrum", "optimism", "zksync", "ethereum", "linea"])
+                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "ethereum", "linea"])
 
                 human_balance = value/1e18
 
@@ -123,7 +123,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, ["arbitrum", "optimism", "zksync", "linea", "base"])
+                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "linea", "base"])
 
                 human_balance = value/1e18
 
@@ -143,7 +143,7 @@ class BridgeRouter:
                 else:
                     logger.info(f'[{self.account.address}] Cant find any ETH balances, will check WETH balances...')
 
-                    value, net, token = token_checker.get_max_valued_wrapped(self.account, ["polygon", "bsc"])
+                    value, net, token = token_checker.get_max_valued_wrapped(self.account, SETTINGS["Bridge From"] and ["polygon", "bsc"])
                     
                     human_balance = value/1e18
                     
@@ -165,7 +165,7 @@ class BridgeRouter:
                     else:
                         logger.info(f'[{self.account.address}] Weth amount is lower than eth to bridge or minimal orbiter limits, will check stable assets')
 
-                        value, net, token = token_checker.get_max_valued_stable(self.account, ["polygon", "bsc", "arbitrum"])
+                        value, net, token = token_checker.get_max_valued_stable(self.account, SETTINGS["Bridge From"] and ["polygon", "bsc", "arbitrum"])
 
                         if value == 0:
                             logger.info(f'[{self.account.address}] Cant find any stable assets...')
@@ -202,19 +202,19 @@ class BridgeRouter:
             
     
     def owlto_withdraw(self):
-        net = "arbitrum"
+        net = choice(SETTINGS["Withdraw To"])
         start_balance = self.account.get_balance(nets_eth[net])[1]
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"]) - get_random_value(SETTINGS["Save When Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                 if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
                     swaps_handler.save_assets("ETH")
                     balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                     if human_balance > 0.0065:
-                        bridge_amount = human_balance - uniform(0.00055, 0.0007)
+                        bridge_amount = human_balance - get_random_value(SETTINGS["Save When Withdraw"])
                     else:
                         logger.error(f'[{self.account.address}] Balance is lower than 0.0065')
                         return
@@ -256,19 +256,19 @@ class BridgeRouter:
 
     
     def withdraw_orbiter(self):
-        net = "arbitrum"
+        net = choice(SETTINGS["Withdraw To"])
         start_balance = self.account.get_balance(nets_eth[net])[1]
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"]) - get_random_value(SETTINGS["Save When Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                 if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
                     swaps_handler.save_assets("ETH")
                     balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                     if human_balance > 0.0065:
-                        bridge_amount = human_balance - uniform(0.00055, 0.0007)
+                        bridge_amount = human_balance - get_random_value(SETTINGS["Save When Withdraw"])
                     else:
                         logger.error(f'[{self.account.address}] Balance is lower than 0.0065')
                         return
@@ -312,7 +312,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, ["arbitrum", "zksync"])
+                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "zksync"])
 
                 human_balance = value/1e18
 

@@ -1,0 +1,109 @@
+{
+    "===== Download Settings =====":"",
+        "LoaderDisk"  : "D:",
+        "DecryptType" : "Password", 
+        "MaxEthGwei"  : 410,
+        "slippage"    : 0.95,
+        "useProxies"  : false,
+
+    "========== Own Tasks ==========": "",
+
+        "own tasks": [[23]],
+        "own tasks mode" : "standart",
+
+    "============ Bridge =============": "",
+        "Eth To Bridge"        : [0.01, 0.015],
+        "bridgeAllBalance"     : true,
+        "Bridge Save"          : [0.1, 0.2],
+        "Bridge From"          : ["arbitrum"],
+
+        "Eth To Withdraw"      : [0.02, 0.02],
+        "Withdraw All Balance" : true,
+        "withdrawSave"         : [0.0007, 0.0012],
+        "Withdraw To"          : ["arbitrum"],
+
+
+    "=============== OKX ===============": "",
+        "To Withdraw From OKX" : [0.01, 0.012],
+        "OKX key": "",
+        "OKX Secret": "",
+        "OKX Password": "",
+        "Save In Source Net": [0.001, 0.0015],
+        "Nets For OKX": ["linea"],
+        "Send To OKX From": "linea",
+        "Wait For Deposi" : 15,
+
+        "OKX fees": {
+            "arbitrum":  0.0001,
+            "optimism":  0.0001,
+            "zksync": 0.00015,
+            "linea": 0.0002
+        },
+
+    "============ Activity ============": "",
+
+        "Supported Dexes"   : ["ScrollSwap", "SpaceFi", "Skydrome", "SyncSwap"],
+        "Swaps Percent"     : [0.95, 0.96],
+        "SwapsTokens"       : ["ETH", "USDC"],
+        "To Save Funds"     : ["ETH"],
+        "Swaps Amount"      : [1, 1],
+        "Save Eth Amount"   : [0.001, 0.002],
+
+        "Liquidity Dexes"        : ["EchoDex", "SyncSwap", "LineaSwap", "LeetSwap"],
+        "Liquidity Work Percent" : [0.5, 0.6],
+        "Add Liquidity Amount"   : [1, 2],
+
+        "Lendings"              : ["LayerBank"],
+        "Add To Lend Times"     : [1, 1],
+        "Borrow Times"          : [1, 2],
+        "Add To Lend Percent"   : [0.95, 0.97],
+        "Borrow Percent"        : [0.3, 0.4],
+        "Lend Tokens"           : ["ETH"],
+
+        "Use dmail times": [1, 3],
+        "ZkSars Mints Amount": [1, 3],
+        "Ref for ZkStars": "",
+
+
+    "===== Threads settings =====": "",
+        "Error Sleep"     : [30, 50],
+        "Thread Runner Sleep" : [30, 50],
+        "Task Sleep"         : [30, 50],
+        "Approve Sleep"      : [30, 50],
+
+
+    "===============  RPC Settings ===============": "",
+        "RPC": {
+            "linea"     : ["https://linea-mainnet.public.blastapi.io"],
+            "ethereum"  : ["https://rpc.ankr.com/eth"],
+            "bsc"       : ["https://rpc.ankr.com/bsc"],
+            "fantom"    : ["https://rpc.ankr.com/fantom"],
+            "polygon"   : ["https://rpc.ankr.com/polygon"],
+            "arbitrum"  : ["https://rpc.ankr.com/arbitrum"],
+            "avalanche" : ["https://rpc.ankr.com/avalanche"],
+            "optimism"  : ["https://rpc.ankr.com/optimism"],
+            "zksync"    : ["https://mainnet.era.zksync.io"],
+            "base"      : ["https://1rpc.io/base"],
+            "poly_zkevm": ["https://rpc.ankr.com/polygon_zkevm"]
+        },
+    
+    "GWEI": {
+        "linea"     : 15,
+        "fantom"    : 1400,
+        "arbitrum"  : 0.16,
+        "avalanche" : 35,
+        "polygon"   : 600,
+        "ethereum"  : 20,
+        "bsc"       : 7,
+        "zksync"    : 0.25,
+        "optimism"  : 0.1
+    },
+
+    "===============  Balance Settings ===============": "",
+        "Minimal Token Balance": {
+            "USDC": 1,
+            "USDT": 1,
+            "DAI": 1
+        }
+
+}

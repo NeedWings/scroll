@@ -1,6 +1,3 @@
-from random import shuffle
-from random import choice
-
 from web3 import Web3
 
 from modules.other.dmail import Dmail
