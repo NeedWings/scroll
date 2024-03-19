@@ -13,13 +13,12 @@ class TokenChecker:
         max_value = 0
         for token in tokens:
             balance = sender.get_balance(token)[0]
-            print(balance)
             if token.symbol == "ETH":
                 balance = balance - get_random_value(SETTINGS["Save Eth Amount"])*1e18
                 logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")
             else:
                 if balance/10**token.decimals < SETTINGS["Minimal Token Balance"][token.symbol]:
-                    balance = 0
+                    balance = 0 
                     logger.info(f"[{sender.get_address()}] {token.symbol} balance below Minimal Token Balance, will count as 0")
                 else:
                     logger.info(f"[{sender.get_address()}] {token.symbol} balance: {balance/10**token.decimals}")

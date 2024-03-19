@@ -5,6 +5,7 @@ from modules.dexes.scroll_swap import ScrollSwap
 from modules.dexes.space_fi import SpaceFi
 from modules.dexes.sky_drome import Skydrome
 from modules.dexes.ambient import Ambient
+from modules.dexes.sushi_swap import SushiSwap
 from modules.config import SETTINGS
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseDex
@@ -26,7 +27,8 @@ class SwapsHandler:
         self.sky = Skydrome()
         self.sync = SyncSwap()
         self.ambient = Ambient()
-        self.dexes = [self.scroll, self.space, self.sky, self.sync, self.ambient]
+        self.sushiswap = SushiSwap()
+        self.dexes = [self.scroll, self.space, self.sky, self.sync, self.ambient, self.sushiswap]
         self.account = account
         for name in SETTINGS["Supported Dexes"]:
             for dex in self.dexes:
@@ -44,7 +46,6 @@ class SwapsHandler:
         res = []
         for token in tokens:
             res.append(tokens_dict[token])
-        print(res)
         return res
 
     def random_swaps(self):

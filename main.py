@@ -112,6 +112,8 @@ def main():
                 proxies_raw = f.read().split("\n")
             proxies = {}
             for proxy in proxies_raw:
+                if proxy == "":
+                    continue
                 print(f'{proxy.split("@")[2]} connected to {"http://" + proxy.split("@")[0] + "@" + proxy.split("@")[1]}')
                 proxies[proxy.split("@")[2].lower()] = "http://" + proxy.split("@")[0] + "@" + proxy.split("@")[1]
             for key in keys:

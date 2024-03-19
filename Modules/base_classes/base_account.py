@@ -23,7 +23,7 @@ class BaseAccount(ABC):
     def setup_w3(self, proxy=None):
         pass
 
-    def get_w3(self, net_name):
+    def get_w3(self, net_name) -> Web3:
         return self.w3[net_name]
 
     def get_address(self):
