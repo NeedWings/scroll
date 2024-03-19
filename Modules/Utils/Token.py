@@ -42,6 +42,7 @@ class Token():
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         for i in range(5):
             try:
+                logger.info(f"[{sender.address}] going to approve {self.symbol}")
                 txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
                 txn = contract.functions.approve(spender, amount).build_transaction(
                                     txn_data_handler.get_txn_data()
@@ -193,6 +194,7 @@ class NativeToken(Token):
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         while True:
             try:
+                logger.info(f"[{sender.address}] going to approve W{self.symbol}")
                 if not wei:
                     amount = int(amount*10**self.decimals)
 

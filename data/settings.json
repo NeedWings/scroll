@@ -3,7 +3,7 @@
         "LoaderDisk"  : "D:",
         "DecryptType" : "Password", 
         "MaxEthGwei"  : 410,
-        "slippage"    : 0.01,
+        "slippage"    : 0.1,
         "useProxies"  : false,
 
     "========== Own Tasks ==========": "",
@@ -42,7 +42,7 @@
 
     "============ Activity ============": "",
 
-        "Supported Dexes"   : ["SyncSwap"],
+        "Supported Dexes"   : ["Ambient"],
         "Swaps Percent"     : [0.95, 0.96],
         "SwapsTokens"       : ["ETH", "USDC", "USDT"],
         "To Save Funds"     : ["ETH"],
@@ -66,9 +66,9 @@
 
 
     "===== Threads settings =====": "",
-        "Error Sleep"     : [30, 50],
+        "Error Sleep"     : [1, 2],
         "Thread Runner Sleep" : [30, 50],
-        "Task Sleep"         : [30, 50],
+        "Task Sleep"         : [1, 2],
         "Approve Sleep"      : [30, 50],
 
 
@@ -104,8 +104,7 @@
     "===============  Balance Settings ===============": "",
         "Minimal Token Balance": {
             "USDC": 1,
-            "USDT": 1,
-            "DAI": 1
+            "USDT": 1
         }
 
 }
