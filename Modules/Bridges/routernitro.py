@@ -25,10 +25,14 @@ class RouterNitro:
             try:
                 w3 = self.account.get_w3(net_from)
                 txn_data_handler = TxnDataHandler(self.account, net_from, w3=w3)
-                r = requests.get(f"https://api-beta.pathfinder.routerprotocol.com/api/v2/quote?fromTokenAddress=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&toTokenAddress=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&amount={amount*1e18}&fromTokenChainId={self.chain_ids[net_from]}&toTokenChainId={self.chain_ids['scroll']}&partnerId=1&destFuel=0",
+                r = requests.get(f"https://api-beta.pathfinder.routerprotocol.com/api/v2/quote?fromTokenAddress=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&toTokenAddress=0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE&amount={int(amount*1e18)}&fromTokenChainId={self.chain_ids[net_from]}&toTokenChainId={self.chain_ids['scroll']}&partnerId=1&destFuel=0",
                                  proxies=self.proxy)
-                
-                data = r.json()
+                try:
+                    data = r.json()
+                except:
+                    logger.error(f"[{self.account.address}] can't get bridge data: {r.text}")
+                    sleeping_sync(self.account.address, True)
+                    continue
                 data["receiverAddress"] = self.account.address
                 data["senderAddress"] = self.account.address
                 bridge_resp = requests.post("https://api-beta.pathfinder.routerprotocol.com/api/v2/transaction", json=data, proxies=self.proxy)
@@ -37,9 +41,9 @@ class RouterNitro:
                 value = txn["value"]
                 to = txn["to"]
                 real_txn = txn_data_handler.get_txn_data(int(value, 16))
-                real_txn["to"] = to
+                real_txn["to"] = w3.to_checksum_address(to)
                 real_txn['data'] = txn_data
-                return txn
+                return real_txn
             except Exception as e:
                 logger.error(f"[{self.account.address}] can't get bridge data: {e}")
                 sleeping_sync(self.account.address, True)

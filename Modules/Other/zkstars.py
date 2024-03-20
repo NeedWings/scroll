@@ -1,3 +1,5 @@
+from random import choice
+
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.txn_data_handler import TxnDataHandler
 
@@ -5,7 +7,7 @@ false = False
 true = True
 
 class ZkStars:
-    contracts = contracts = [
+    contracts = [
         "0x609c2f307940B8f52190b6D3D3A41C762136884E",
         "0x16c0Baa8a2aA77fab8d0aeCe9B6947EE1b74B943",
         "0xc5471e35533E887f59Df7A31F7C162Eb98F367F7",
@@ -32,7 +34,7 @@ class ZkStars:
     def get_txn_for_mint(self, ref: str, sender: BaseAccount):
         w3 = sender.get_w3("scroll")
         txn_data_handler = TxnDataHandler(sender, "scroll", w3=w3)
-        contract = w3.eth.contract(self.contract_address, abi = self.abi)
+        contract = w3.eth.contract(choice(self.contracts), abi = self.abi)
         txn = contract.functions.safeMint(ref).build_transaction(txn_data_handler.get_txn_data(int(0.0001*1e18)))
         
         return txn

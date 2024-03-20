@@ -79,7 +79,7 @@ def gas_locker(gas_lock, ender):
             
         except Exception as error:
             pass
-        sleep(randint(20, 40))
+        sleep(randint(10, 20))
 
 
 def main():

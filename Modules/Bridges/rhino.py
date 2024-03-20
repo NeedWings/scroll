@@ -596,7 +596,6 @@ class Rhino:
             },
             int(balance)
         )
-        print(tx)
         r = requests.post("https://api.rhino.fi/v1/trading/bridgedWithdrawals",
                            json={
                                "amount": str(balance),
@@ -610,7 +609,6 @@ class Rhino:
                            }, headers={
                     "authorization": auth
                 })
-        print(r.text)
         logger.success(f"[{self.account.address}] withdraw requests sent! Resp: {r.text}")
 
 

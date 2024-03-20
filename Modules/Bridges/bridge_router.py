@@ -49,7 +49,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "ethereum", "base", "linea"])
+                value, net, token = token_checker.get_max_valued_native(self.account, list(set(SETTINGS["Bridge From"]) & set(["arbitrum", "optimism", "zksync", "ethereum", "base", "linea"])))
 
                 human_balance = value/1e18
 
@@ -86,7 +86,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "ethereum", "linea"])
+                value, net, token = token_checker.get_max_valued_native(self.account, list(set(SETTINGS["Bridge From"]) & set(["arbitrum", "optimism", "zksync", "ethereum", "linea"])))
 
                 human_balance = value/1e18
 
@@ -123,7 +123,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "optimism", "zksync", "linea", "base"])
+                value, net, token = token_checker.get_max_valued_native(self.account, list(set(SETTINGS["Bridge From"]) & set(["arbitrum", "optimism", "zksync", "linea", "base"])))
 
                 human_balance = value/1e18
 
@@ -143,7 +143,7 @@ class BridgeRouter:
                 else:
                     logger.info(f'[{self.account.address}] Cant find any ETH balances, will check WETH balances...')
 
-                    value, net, token = token_checker.get_max_valued_wrapped(self.account, SETTINGS["Bridge From"] and ["polygon", "bsc"])
+                    value, net, token = token_checker.get_max_valued_wrapped(self.account, list(set(SETTINGS["Bridge From"]) & set(["polygon", "bsc"])))
                     
                     human_balance = value/1e18
                     
@@ -165,7 +165,7 @@ class BridgeRouter:
                     else:
                         logger.info(f'[{self.account.address}] Weth amount is lower than eth to bridge or minimal orbiter limits, will check stable assets')
 
-                        value, net, token = token_checker.get_max_valued_stable(self.account, SETTINGS["Bridge From"] and ["polygon", "bsc", "arbitrum"])
+                        value, net, token = token_checker.get_max_valued_stable(self.account, list(set(SETTINGS["Bridge From"]) & set(["polygon", "bsc", "arbitrum"])))
 
                         if value == 0:
                             logger.info(f'[{self.account.address}] Cant find any stable assets...')
@@ -312,7 +312,7 @@ class BridgeRouter:
         start_balance = self.account.get_balance(eth)[1]
         while True:
             try:
-                value, net, token = token_checker.get_max_valued_native(self.account, SETTINGS["Bridge From"] and ["arbitrum", "zksync"])
+                value, net, token = token_checker.get_max_valued_native(self.account, list(set(SETTINGS["Bridge From"]) & set(["arbitrum", "zksync"])))
 
                 human_balance = value/1e18
 
@@ -321,7 +321,7 @@ class BridgeRouter:
                 else:
                     balance = get_random_value(SETTINGS["Eth To Bridge"]) - get_random_value(SETTINGS["Bridge Save"])
                     
-                if balance > 0.005:
+                if balance > 0.002:
                     logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
                     
                     self.rhino_handler.bridge_to_scroll(balance, net)
@@ -342,12 +342,16 @@ class BridgeRouter:
 
         logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
 
+    def withdraw_from_rhino(self):
+        self.rhino_handler.withdraw_from_rhino()
+
+
     def bridge(self, bridge_type):
         if bridge_type == OWLTO_BRIDGE:
             self.owlto_bridge()
         elif bridge_type == ORBITER_BRIDGE:
             self.orbiter_bridge()
-        elif bridge_type == OWLTO_BRIDGE:
+        elif bridge_type == OWLTO_WITHDRAW:
             self.owlto_withdraw()
         elif bridge_type == ORBITER_WITHDRAW:
             self.withdraw_orbiter()

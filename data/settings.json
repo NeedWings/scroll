@@ -2,7 +2,7 @@
     "===== Download Settings =====":"",
         "LoaderDisk"  : "D:",
         "DecryptType" : "Password", 
-        "MaxEthGwei"  : 40,
+        "MaxEthGwei"  : 403,
         "slippage"    : 0.01,
         "useProxies"  : false,
 
@@ -12,14 +12,15 @@
         "own tasks mode" : "standart",
 
     "============ Bridge =============": "",
+        "Bridge Type"          : ["Rhino", "Owlto", "Orbiter", "RouterNitro"],
         "Eth To Bridge"        : [0.01, 0.015],
-        "bridgeAllBalance"     : true,
-        "Bridge Save"          : [0.1, 0.2],
+        "Bridge All Balance"   : false,
+        "Bridge Save"          : [0.001, 0.002],
         "Bridge From"          : ["arbitrum"],
 
-        "Eth To Withdraw"      : [0.02, 0.02],
-        "Withdraw All Balance" : true,
-        "withdrawSave"         : [0.0007, 0.0012],
+        "Eth To Withdraw"      : [0.01, 0.015],
+        "Withdraw All Balance" : false,
+        "Save When Withdraw"   : [0.0007, 0.0012],
         "Withdraw To"          : ["arbitrum"],
 
 
@@ -74,7 +75,7 @@
 
     "===============  RPC Settings ===============": "",
         "RPC": {
-            "scroll"    : ["https://rpc.scroll.io"],
+            "scroll"    : ["https://1rpc.io/scroll"],
             "linea"     : ["https://linea-mainnet.public.blastapi.io"],
             "ethereum"  : ["https://rpc.ankr.com/eth"],
             "bsc"       : ["https://rpc.ankr.com/bsc"],
