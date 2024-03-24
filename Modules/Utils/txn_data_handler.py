@@ -59,7 +59,10 @@ class TxnDataHandler:
             elif self.net_name == "arbitrum":
                 data["maxPriorityFeePerGas"] = Web3.to_wei(0.01, "gwei")
         else:
-            data["gasPrice"] = gas_price
+            if self.net_name == "scroll":
+                data["gasPrice"] = gas_price
+            else:
+                data["gasPrice"] = int(gas_price* SETTINGS["Scroll Gas Price Coeff"])
 
 
            

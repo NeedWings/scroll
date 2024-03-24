@@ -101,6 +101,7 @@
         "optimism"  : 0.1,
         "scroll"    : 15
     },
+    "Scroll Gas Price Coeff": 1.1,
 
     "===============  Balance Settings ===============": "",
         "Minimal Token Balance": {
