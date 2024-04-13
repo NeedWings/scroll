@@ -122,9 +122,11 @@ def main():
         else:
             for key in keys:
                 accounts.append(Account(key))
-        
-        starter.start(action, gas_lock, accounts, ender)
-        gas_locker(gas_lock, ender)
+        try:
+            th = starter.start(action, gas_lock, accounts, ender)
+            gas_locker(gas_lock, ender)
+        except KeyboardInterrupt:
+            th.kill()
             
 if __name__ == "__main__":
     multiprocessing.freeze_support()

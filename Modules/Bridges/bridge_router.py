@@ -21,6 +21,7 @@ OWLTO_WITHDRAW = 3
 ORBITER_WITHDRAW = 4
 RHINO_BRIDGE = 5
 ROUTER_NITRO_BRIDGE = 6
+ROUTER_NITRO_WITHDRAW = 7
 
 class BridgeRouter:
 
@@ -33,7 +34,8 @@ class BridgeRouter:
 
     withdraw_consts = {
         "Owlto": OWLTO_WITHDRAW,
-        "Orbiter": ORBITER_WITHDRAW
+        "Orbiter": ORBITER_WITHDRAW,
+        "RouterNitro": ROUTER_NITRO_WITHDRAW
     }
 
     def __init__(self, account: BaseAccount) -> None:
@@ -207,7 +209,7 @@ class BridgeRouter:
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"]) - get_random_value(SETTINGS["Save When Withdraw"])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                 if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
@@ -261,7 +263,7 @@ class BridgeRouter:
         while True:
             try:
                 w3 = self.account.get_w3("scroll")
-                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"]) - get_random_value(SETTINGS["Save When Withdraw"])
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
                 balance, human_balance = eth.balance_of(self.account.address, w3=w3)
                 if SETTINGS["Withdraw All Balance"]:
                     swaps_handler = SwapsHandler(self.account)
@@ -342,6 +344,59 @@ class BridgeRouter:
 
         logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
 
+    def withdraw_router_nitro(self):
+        net = choice(SETTINGS["Withdraw To"])
+        start_balance = self.account.get_balance(nets_eth[net])[1]
+        while True:
+            try:
+                w3 = self.account.get_w3("scroll")
+                bridge_amount = get_random_value(SETTINGS["Eth To Withdraw"])
+                balance, human_balance = eth.balance_of(self.account.address, w3=w3)
+                if SETTINGS["Withdraw All Balance"]:
+                    swaps_handler = SwapsHandler(self.account)
+                    swaps_handler.save_assets("ETH")
+                    balance, human_balance = eth.balance_of(self.account.address, w3=w3)
+                    if human_balance > 0.0005:
+                        bridge_amount = human_balance - get_random_value(SETTINGS["Save When Withdraw"])
+                    else:
+                        logger.error(f'[{self.account.address}] Balance is lower than 0.0065')
+                        return
+                else:
+                    if human_balance > bridge_amount:
+                        pass    
+                    else:
+                        swaps_handler = SwapsHandler(self.account)
+                        swaps_handler.save_assets("ETH")
+                        balance, human_balance = eth.balance_of(self.account.address, w3=w3)
+                        if human_balance < bridge_amount:
+                            logger.error(f'[{self.account.address}] Eth balance is lower than: OrbiterAmountBridge and busd balance is 0')
+                            return
+
+                logger.info(f"[{self.account.address}] going to withdraw with RouterNitro {bridge_amount} ETH")
+
+
+                txn = self.router_nitro.get_withdraw_txn(net, bridge_amount)
+
+                self.account.send_txn(txn, "scroll")
+
+                break
+               
+
+            except Exception as e:
+                logger.error(f"[{self.account.address}] got error: {e}")
+                sleeping_sync(self.account.address, True)
+                
+        
+        new_balance = start_balance
+        while new_balance == start_balance:
+            sleeping_sync(self.account.address)
+            new_balance = self.account.get_balance(nets_eth[net])[1]
+
+            logger.info(f"[{self.account.address}] waiting for balance. current: {new_balance} ETH")
+            
+
+        logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
+
     def withdraw_from_rhino(self):
         self.rhino_handler.withdraw_from_rhino()
 
@@ -359,6 +414,8 @@ class BridgeRouter:
             self.rhino_bridge()
         elif bridge_type == ROUTER_NITRO_BRIDGE:
             self.router_nitro_bridge()
+        elif bridge_type == ROUTER_NITRO_WITHDRAW:
+            self.withdraw_router_nitro()
 
 
 

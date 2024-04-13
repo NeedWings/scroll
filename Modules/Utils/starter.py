@@ -84,16 +84,12 @@ class Starter:
     def start(self, module, gas_lock, accounts, ender):
         is_own_tasks = module == "Own Tasks"
         if is_own_tasks:
-            try:
-                own_tasks = SETTINGS["own tasks"]
-            except:
-                return "Json error, check own-tasks"
+            own_tasks = SETTINGS["own tasks"]
             mode = SETTINGS["own tasks mode"]
-            self.run_own_tasks(own_tasks, mode, gas_lock, ender, accounts)
+            return self.run_own_tasks(own_tasks, mode, gas_lock, ender, accounts)
         else:
             tasks = [self.task_numbers[module]]
-            self.run_own_tasks(tasks, "standart", gas_lock, ender, accounts)
-        return None
+            return self.run_own_tasks(tasks, "standart", gas_lock, ender, accounts)
     
     def run_own_tasks(self, own_tasks, mode, gas_lock, ender, accounts):
 
@@ -102,6 +98,7 @@ class Starter:
         p = Process(target=self.run_tasks, args=(own_tasks, mode, accounts, gas_lock, ender))
         p.start()
         self.running_threads = p
+        return p
 
 
 

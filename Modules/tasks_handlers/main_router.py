@@ -26,7 +26,7 @@ class MainRouter:
             bridge_router = BridgeRouter(self.account)
             bridge_router.bridge(bridge_router.bridge_consts[selected])
         elif self.task_number == 2:
-            selected = choice(list(set(SETTINGS["Bridge Type"]) & set(["Orbiter", "Owlto"])))
+            selected = choice(list(set(SETTINGS["Bridge Type"]) & set(["Orbiter", "Owlto", "RouterNitro"])))
             bridge_router = BridgeRouter(self.account)
             bridge_router.bridge(bridge_router.withdraw_consts[selected])
         elif self.task_number == 5 :

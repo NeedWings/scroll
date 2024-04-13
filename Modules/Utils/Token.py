@@ -3,7 +3,7 @@ from time import sleep
 
 from web3 import Web3
 
-from modules.config import RPC_LIST, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, SETTINGS
+from modules.config import RPC_LIST, ABI, NATIVE_TOKENS_SYMBOLS, NATIVE_WRAPPED_CONTRACTS, SETTINGS, ERC_721_ABI
 from modules.utils.Logger import logger
 from modules.utils.utils import sleeping_sync, get_random_value, get_random_value_int, req
 from modules.utils.txn_data_handler import TxnDataHandler
@@ -212,3 +212,50 @@ class NativeToken(Token):
                 return None
             except Exception as e:
                 logger.error(f"[{sender.address}] can't get approve txn: {e}")
+
+class ERC721Token(Token):
+    def __init__(self, symbol, contract_address, net) -> None:
+        super().__init__(symbol, contract_address, 1, net, False)
+
+    def get_price(self):
+        raise Exception("can't get price of NFT")
+    
+    def get_usd_value(self, amount):
+        raise Exception("can't get usd value of NFT")
+    
+    def balance_of(self, address, w3=None):
+        if w3:
+            self.w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
+        contract = w3.eth.contract(self.contract_address, abi=ABI)
+        while True:
+            try:
+                balance = contract.functions.balanceOf(address).call()
+                return balance
+            except Exception as e:
+                logger.error(f"[{address}] can't get balance of {self.symbol}: {e}")
+                sleeping_sync(address, True)
+    
+    def get_approve_txn(self, sender: BaseAccount, spender, token_id, w3 = None):
+        if w3:
+            w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
+        contract = w3.eth.contract(self.contract_address, abi=ERC_721_ABI)
+        for i in range(5):
+            try:
+                logger.info(f"[{sender.address}] going to approve {self.symbol}")
+                txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
+                txn = contract.functions.approve(spender, token_id).build_transaction(
+                                    txn_data_handler.get_txn_data()
+                                )
+                
+                sender.send_txn(txn, self.net_name)
+                t = get_random_value_int(SETTINGS["Approve Sleep"])
+                logger.info(f"[{sender.get_address()}] sleeping {t} s")
+                sleep(t)
+                return None
+            except Exception as e:
+                logger.error(f"[{sender.address}] can't get approve txn: {e}")
+                sleeping_sync(sender.address, True)
