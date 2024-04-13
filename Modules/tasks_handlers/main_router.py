@@ -47,6 +47,12 @@ class MainRouter:
         elif self.task_number == 27:
             other_handler = OtherHandler(self.account)
             other_handler.zkstars()
+        elif self.task_number == 28:
+            other_handler = OtherHandler(self.account)
+            other_handler.checkin_owlto()
+        elif self.task_number == 29:
+            other_handler = OtherHandler(self.account)
+            other_handler.checkin_rubyscore()
         elif self.task_number == 201:
             api_key = SETTINGS["OKX key"]
             secret = SETTINGS["OKX Secret"]

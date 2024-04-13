@@ -50,6 +50,7 @@ def get_action() -> str:
             "",
             "Dmail",
             "ZkStars mint",
+            "Check In",
             "",
             "Own Tasks",
             "========================",

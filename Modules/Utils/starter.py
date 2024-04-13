@@ -57,6 +57,8 @@ class Starter:
         "Random Swaps": 21,
         "Save Assets": 3,
         "ZkStars mint": 27,
+        "Check In Owlto": 28,
+        "Check In RubyScore": 29,
         "Withdraw from Rhino to Scroll": 5
     }
 
