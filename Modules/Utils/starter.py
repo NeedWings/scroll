@@ -59,7 +59,9 @@ class Starter:
         "ZkStars mint": 27,
         "Check In Owlto": 28,
         "Check In RubyScore": 29,
-        "Withdraw from Rhino to Scroll": 5
+        "Withdraw from Rhino to Scroll": 5,
+        "Bridge from arb/opti to eth": 30,
+        "Off Bridge": 31
     }
 
     running_threads: Process = None

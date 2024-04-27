@@ -5,7 +5,9 @@ from modules.dexes.one_inch import OneInch
 from modules.bridges.orbiter import Orbiter
 from modules.bridges.owlto import Owlto
 from modules.bridges.rhino import Rhino
+from modules.bridges.relay import Relay
 from modules.bridges.routernitro import RouterNitro
+from modules.bridges.scroll_bridge import ScrollBridge
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.token import Token
 from modules.utils.token_stor import eth_ethereum, eth, nets_eth
@@ -40,11 +42,13 @@ class BridgeRouter:
 
     def __init__(self, account: BaseAccount) -> None:
         self.account = account
+        self.scroll_bridge = ScrollBridge(account)
         self.owlto_handler = Owlto(account)
         self.orbiter_handler = Orbiter(account)
         self.one_inch_handler = OneInch()
         self.rhino_handler = Rhino(account)
         self.router_nitro = RouterNitro(account)
+        self.relay = Relay(account)
 
 
     def owlto_bridge(self):
@@ -400,6 +404,76 @@ class BridgeRouter:
     def withdraw_from_rhino(self):
         self.rhino_handler.withdraw_from_rhino()
 
+    def bridge_to_eth(self):
+        start_balance = self.account.get_balance(eth_ethereum)[1]
+        while True:
+            try:
+                value, net, token = token_checker.get_max_valued_native(self.account, list(set(SETTINGS["Bridge From"]) & set(["arbitrum", "optimism"])))
+
+                human_balance = value/1e18
+
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
+                else:
+                    balance = get_random_value(SETTINGS["Eth To Bridge"])
+
+                if balance > 0.001:
+                    logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
+                    
+                    resp = self.relay.bridge_to_eth(balance, net)
+                    if not resp:
+                        return
+                    break
+                else:
+                    logger.info(f'[{self.account.address}] Not enough funds')
+                    return
+            except Exception as e:
+                logger.error(f"[{self.account.address}] got error: {e}")
+                sleeping_sync(self.account.address, True)
+        new_balance = start_balance
+        while new_balance == start_balance:
+            sleeping_sync(self.account.address)
+            new_balance = self.account.get_balance(eth_ethereum)[1]
+
+            logger.info(f"[{self.account.address}] waiting for balance. current: {new_balance} ETH")
+            
+
+        logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
+
+    def off_bridge(self):
+        start_balance = self.account.get_balance(eth)[1]
+        while True:
+            try:
+                value, net, token = token_checker.get_max_valued_native(self.account, ["ethereum"])
+
+                human_balance = value/1e18
+
+                if SETTINGS["Bridge All Balance"]:
+                    balance = human_balance - get_random_value(SETTINGS["Bridge Save"])
+                else:
+                    balance = get_random_value(SETTINGS["Eth To Bridge"])
+                    
+                if balance > 0.001:
+                    logger.info(f'[{self.account.address}] Will bridge from: {net}, balance: {human_balance} ETH')
+                    
+                    txn = self.scroll_bridge.get_bridge_txn(balance)
+                    self.account.send_txn(txn, "ethereum")
+                    break
+                else:
+                    logger.error(f'[{self.account.address}] Cant find any ETH balances')
+                    sleeping_sync(self.account.address, True)
+            except Exception as e:
+                logger.error(f"[{self.account.address}] got error: {e}")
+                sleeping_sync(self.account.address, True)
+        new_balance = start_balance
+        while new_balance == start_balance:
+            sleeping_sync(self.account.address)
+            new_balance = self.account.get_balance(eth)[1]
+
+            logger.info(f"[{self.account.address}] waiting for balance. current: {new_balance} ETH")
+            
+
+        logger.success(f"[{self.account.address}] found balance! Current: {new_balance} ETH")
 
     def bridge(self, bridge_type):
         if bridge_type == OWLTO_BRIDGE:

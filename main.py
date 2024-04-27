@@ -33,6 +33,8 @@ def get_action() -> str:
             "Bridge",
             "Withdraw", 
             "Withdraw from Rhino to Scroll",
+            "Bridge from arb/opti to eth",
+            "Off Bridge",
             "",
             "Add To Lend",
             "Borrow",

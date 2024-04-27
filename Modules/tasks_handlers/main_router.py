@@ -29,6 +29,12 @@ class MainRouter:
             selected = choice(list(set(SETTINGS["Bridge Type"]) & set(["Orbiter", "Owlto", "RouterNitro"])))
             bridge_router = BridgeRouter(self.account)
             bridge_router.bridge(bridge_router.withdraw_consts[selected])
+        elif self.task_number == 30:
+            bridge_router = BridgeRouter(self.account)
+            bridge_router.bridge_to_eth()
+        elif self.task_number == 31:
+            bridge_router = BridgeRouter(self.account)
+            bridge_router.off_bridge()
         elif self.task_number == 5 :
             bridge_router = BridgeRouter(self.account)
             bridge_router.withdraw_from_rhino()
