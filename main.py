@@ -10,10 +10,12 @@ from inquirer.themes import load_theme_from_dict as loadth
 from web3 import Web3
 
 from modules.utils.starter import Starter
-from modules.utils.launch import encode_secrets, decode_secrets, transform_keys
+from modules.utils.launch import encode_secrets, decode_secrets, transform_keys, checking_license
 from modules.utils.account import Account, ethAccount
 from modules.config import autosoft, subs_text, SETTINGS_PATH, SETTINGS, RPC_LIST
 
+if __name__ == "__main__":
+    checking_license()
 
 def get_action() -> str:
     theme = {
