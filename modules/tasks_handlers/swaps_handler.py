@@ -125,4 +125,5 @@ class SwapsHandler:
             txn = eth.create_unwrap_txn(self.account, w3=w3)
             if txn is not None:
                 self.account.send_txn(txn, "scroll")
+                sleeping_sync(self.account.get_address())
         

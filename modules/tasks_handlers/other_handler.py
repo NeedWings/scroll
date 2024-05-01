@@ -25,6 +25,7 @@ class OtherHandler:
                 logger.info(f"[{self.account.address}] going to send message")
                 txn = dmail.send_msg(self.account)
                 self.account.send_txn(txn, "scroll")
+                sleeping_sync(self.account.get_address())
             except Exception as e:
                 logger.error(f"[{self.account.get_address()}] got erroor: {e}")
                 sleeping_sync(self.account.get_address(), True)
@@ -63,6 +64,7 @@ class OtherHandler:
                     txn = zkstars.get_txn_for_mint(ref, self.account, to_mint)
                     self.account.send_txn(txn, "scroll")
                     not_used_contracts.remove(to_mint)
+                    sleeping_sync(self.account.get_address())
                 except Exception as e:
                     logger.error(f"[{self.account.get_address()}] got erroor: {e}")
                     sleeping_sync(self.account.get_address(), True)
@@ -73,6 +75,7 @@ class OtherHandler:
                     ref = Web3.to_checksum_address(ref)
                     txn = zkstars.get_txn_for_mint(ref, self.account)
                     self.account.send_txn(txn, "scroll")
+                    sleeping_sync(self.account.get_address())
                 except Exception as e:
                     logger.error(f"[{self.account.get_address()}] got erroor: {e}")
                     sleeping_sync(self.account.get_address(), True)
@@ -81,8 +84,10 @@ class OtherHandler:
         logger.info(f"[{self.account.address}] going to check in in owlto")
         txn = check_in.owlto(self.account)
         self.account.send_txn(txn, "scroll")
+        sleeping_sync(self.account.get_address())
 
     def checkin_rubyscore(self):
         logger.info(f"[{self.account.address}] going to check in in rubyscore")
         txn = check_in.rubyscore(self.account)
         self.account.send_txn(txn, "scroll")
+        sleeping_sync(self.account.get_address())
