@@ -10,7 +10,7 @@ from modules.config import SETTINGS
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseDex
 from modules.utils.token import Token
-from modules.utils.token_stor import tokens, tokens_dict
+from modules.utils.token_stor import tokens, tokens_dict, eth
 from modules.utils.Logger import logger
 from modules.utils.utils import get_random_value, get_random_value_int, sleeping_sync
 from modules.utils.token_checker import token_checker
@@ -120,4 +120,9 @@ class SwapsHandler:
             except Exception as e:
                 logger.error(f"[{self.account.get_address()}] got error: {e}")
                 sleeping_sync(self.account.get_address(), True)
+        if to == "ETH":
+            w3= self.account.get_w3("scroll")
+            txn = eth.create_unwrap_txn(self.account, w3=w3)
+            if txn is not None:
+                self.account.send_txn(txn, "scroll")
         
