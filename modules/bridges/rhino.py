@@ -107,7 +107,7 @@ class Rhino:
     def createSignedTransfer(self, tx):
 
         tx["nonce"] = random.randint(0, 2**31-1)
-        tx["expirationTimestamp"] = 476148
+        tx["expirationTimestamp"] = 481676
 
         signature = self.sign_tx(tx)
         tx["signature"] = signature
