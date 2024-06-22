@@ -98,3 +98,4 @@ def base36encode(number, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
         base36 = alphabet[i] + base36
  
     return sign + base36
+

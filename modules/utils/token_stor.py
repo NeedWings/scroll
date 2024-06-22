@@ -55,3 +55,11 @@ tokens_dict = {
     "USDT": usdt,
     "DAI": dai
 }
+
+token_from_contract ={
+    eth.contract_address.lower(): eth,
+    "0x0000000000000000000000000000000000000000": eth,
+    usdc.contract_address.lower(): usdc,
+    usdt.contract_address.lower(): usdt,
+    dai.contract_address.lower(): dai
+}

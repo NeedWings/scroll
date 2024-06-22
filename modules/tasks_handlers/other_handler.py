@@ -5,6 +5,7 @@ from web3 import Web3
 from modules.other.dmail import Dmail
 from modules.other.zkstars import ZkStars
 from modules.other.check_in import CheckIn
+from modules.other.points_checker import PointsChecker
 from modules.config import SETTINGS
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.Logger import logger
@@ -18,6 +19,7 @@ check_in = CheckIn()
 class OtherHandler:
     def __init__(self, account: BaseAccount) -> None:
         self.account = account
+        self.checker = PointsChecker(self.account)
 
     def dmail(self):
         for _ in range(get_random_value_int(SETTINGS["Use dmail times"])):
@@ -91,3 +93,6 @@ class OtherHandler:
         txn = check_in.rubyscore(self.account)
         self.account.send_txn(txn, "scroll")
         sleeping_sync(self.account.get_address())
+
+    def check_points(self):
+        self.checker.handle()

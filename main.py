@@ -56,6 +56,7 @@ def get_action() -> str:
             "ZkStars mint",
             "Check In Owlto",
             "Check In RubyScore",
+            "Check points",
             "",
             "Own Tasks",
             "========================",
@@ -96,7 +97,8 @@ def main():
     f = open(f"{SETTINGS_PATH}to_run_addresses.txt", "r")
     addresses = f.read().lower().split("\n")
     f.close()
-                
+    with open(f"{SETTINGS_PATH}scroll-points.csv", "w") as f:
+        f.write("Address;ETH;USDT;USDC;Total")
     action = get_action()
     if action == "Encode secrets":
         encode_secrets()

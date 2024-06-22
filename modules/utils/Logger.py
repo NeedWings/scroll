@@ -4,7 +4,7 @@ from loguru import logger as console_log
 
 from modules.config import SETTINGS_PATH
 
-global_log = ""
+global_log = {}
 indexes = []
 date_and_time = str(datetime.datetime.now()).replace(":", ".")
 

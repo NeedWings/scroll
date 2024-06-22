@@ -260,3 +260,35 @@ class ERC721Token(Token):
             except Exception as e:
                 logger.error(f"[{sender.address}] can't get approve txn: {e}")
                 sleeping_sync(sender.address, True)
+
+
+class AmbientV3Position(Token):
+    
+    def __init__(self, symbol: str, token1: str, token2: str, bid_tick: int, ask_tick: int, liq_amount: int, is_ambient: bool, opened: bool) -> None:
+        self.token1 = token1
+        self.token2 = token2
+        self.opened = opened
+        self.bid_tick = bid_tick
+        self.ask_tick = ask_tick
+        self.is_ambient = is_ambient
+        self.liq_amount = liq_amount
+        super().__init__(symbol, "0x123", 0, "scroll", False)
+
+    def balance_of(self, address, w3=None, of_wrapped=False):
+        if self.opened:
+            return 0xfffffffff, 0xfffffffff
+        else:
+            return 0, 0
+        
+    def get_approve_txn(self, sender: BaseAccount, spender, amount, w3=None):
+        return None
+    
+    def get_total_supply(self, address, w3=None):
+        return None
+    
+    def get_usd_value(self, amount):
+        return None
+    
+    def get_price(self):
+        return None
+    

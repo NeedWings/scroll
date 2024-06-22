@@ -89,6 +89,9 @@ class MainRouter:
         elif self.task_number == 26:
             lend_handler = LendingHandler(self.account)
             lend_handler.repay()
+        elif self.task_number == 8821:
+            other_handler = OtherHandler(self.account)
+            other_handler.check_points()
         elif self.task_number == 0:
             own_tasks_router = OwnTasks(self.account)
             own_tasks_router.main(self)

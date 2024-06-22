@@ -61,7 +61,8 @@ class Starter:
         "Check In RubyScore": 29,
         "Withdraw from Rhino to Scroll": 5,
         "Bridge from arb/opti to eth": 30,
-        "Off Bridge": 31
+        "Off Bridge": 31,
+        "Check points": 8821
     }
 
     running_threads: Process = None

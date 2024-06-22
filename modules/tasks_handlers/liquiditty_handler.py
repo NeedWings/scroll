@@ -3,6 +3,7 @@ from random import shuffle, choice
 from modules.dexes.scroll_swap import ScrollSwap
 from modules.dexes.space_fi import SpaceFi
 from modules.dexes.sky_drome import Skydrome
+from modules.dexes.ambient import Ambient
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseDex
 from modules.utils.token import Token
@@ -25,8 +26,9 @@ class LiquidityHandler:
         self.scroll = ScrollSwap()
         self.space = SpaceFi()
         self.sky = Skydrome()
+        self.ambient = Ambient()
 
-        self.liq_dexes = [self.scroll, self.space, self.sky]
+        self.liq_dexes = [self.scroll, self.space, self.sky, self.ambient]
 
         self.supported_dexes_for_liq = []
     
@@ -104,7 +106,10 @@ class LiquidityHandler:
         shuffle(dexes)
         for dex in dexes:
             dex: BaseDex
-            lptokens = dex.lpts.copy()
+            if dex.name == "Ambient":
+                lptokens = dex.lpts(self.account)
+            else:
+                lptokens = dex.lpts.copy()
             shuffle(lptokens)
             for lpt in lptokens:
                 try:
