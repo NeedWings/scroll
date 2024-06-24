@@ -8,7 +8,7 @@
 
     "========== Own Tasks ==========": "",
 
-        "own tasks": [24, [22, 4, 21, 12, 28], 23, 3],
+        "own tasks": [24, 3, 22],
         "own tasks mode" : "invert",
 
     "============ Bridge =============": "",
@@ -45,22 +45,22 @@
 
         "Supported Dexes"   : ["SushiSwap", "Ambient", "ScrollSwap", "SyncSwap", "SkyDrome", "SpaceFi"],
         "Swaps Percent"     : [0.5, 0.6],
-        "SwapsTokens"       : ["ETH", "USDC", "USDT", "DAI"],
+        "SwapsTokens"       : ["ETH", "USDC", "USDT"],
         "To Save Funds"     : ["ETH", "USDC"],
         "Swaps Amount"      : [3, 6],
         "Save Eth Amount"   : [0.005, 0.008],
 
         "Liquidity Dexes"        : ["Ambient"],
-        "Liquidity Work Percent" : [0.2, 0.4],
+        "Liquidity Work Percent" : [0.8, 0.9],
         "Add Liquidity Amount"   : [1, 1],
-        "V3 Liq Range"           : [0.1, 0.2],
+        "V3 Liq Range"           : [0.04, 0.06],
 
-        "Lendings"              : ["LayerBank"],
+        "Lendings"              : ["Aave"],
         "Add To Lend Times"     : [1, 1],
         "Borrow Times"          : [1, 2],
         "Add To Lend Percent"   : [0.95, 0.97],
         "Borrow Percent"        : [0.3, 0.4],
-        "Lend Tokens"           : ["ETH", "USDC"],
+        "Lend Tokens"           : [ "USDC"],
 
         "Use dmail times": [1, 3],
         "ZkSars Mints Amount": [1, 3],
@@ -69,10 +69,10 @@
 
 
     "===== Threads settings =====": "",
-        "Error Sleep"     : [30, 50],
-        "Thread Runner Sleep" : [1, 1],
-        "Task Sleep"         : [30, 50],
-        "Approve Sleep"      : [30, 50],
+        "Error Sleep"     : [1, 1],
+        "Thread Runner Sleep" : [123, 231],
+        "Task Sleep"         : [1, 1],
+        "Approve Sleep"      : [1, 1],
 
 
     "===============  RPC Settings ===============": "",

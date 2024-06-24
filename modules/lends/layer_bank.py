@@ -175,7 +175,9 @@ class LayerBank(BaseLend):
         ).build_transaction(txn_data_handler.get_txn_data())
         return txn
     
-    def create_txn_to_borrow_token(self, amount: float, token: Token, sender: BaseAccount):
+    def create_txn_to_borrow_token(self, amount: int, token: Token, sender: BaseAccount):
+        amount = amount/10**token.decimals
+        logger.info(f"[{sender.address}] going to borrow {amount} {token.symbol}")
         w3 = sender.get_w3("scroll")
         contract = w3.eth.contract(self.contract_address, abi=self.abi)
         txn_data_handler = TxnDataHandler(sender, "scroll", w3=w3)

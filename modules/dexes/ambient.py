@@ -119,6 +119,8 @@ class Ambient(BaseDex):
         token1_price = token_in.get_price()
         token2_price = token_out.get_price()
         token1_for_token2_ratio = token1_price/token2_price
+        if not in_prioritized:
+            token1_for_token2_ratio = 1/token1_for_token2_ratio
         base_price = self.base_prices[name]
         current_tick = int(log(token1_for_token2_ratio/base_price, 1.0001))
         current_tick = int(current_tick/4) * 4
@@ -133,8 +135,7 @@ class Ambient(BaseDex):
             askTick = 0
         else:
             
-            if not in_prioritized:
-                token1_for_token2_ratio = 1/token1_for_token2_ratio
+            
             
 
 
@@ -156,7 +157,8 @@ class Ambient(BaseDex):
                 "bidTick": bidTick,
                 "askTick": askTick,
                 "limitLower": limitLower,
-                "limitUpper": limitUpper
+                "limitUpper": limitUpper,
+                "prioritized": in_prioritized
             }
         else:
             return {
@@ -166,7 +168,8 @@ class Ambient(BaseDex):
                 "bidTick": bidTick,
                 "askTick": askTick,
                 "limitLower": limitLower,
-                "limitUpper": limitUpper
+                "limitUpper": limitUpper,
+                "prioritized": in_prioritized
             }
 
     def transform_token_position(self, token_in: Token, token_out: Token):
@@ -214,6 +217,7 @@ class Ambient(BaseDex):
             value = 0
 
         transformed_data = self.transform_token_position(token1, token2)
+        
         args_for_encode = (
             transformed_data["token_in"],
             transformed_data["token_out"],
@@ -254,6 +258,10 @@ class Ambient(BaseDex):
             value = 0
 
         transformed_data = self.transform_tokens_for_adding(token1, token2)
+        if transformed_data["prioritized"]:
+            amount = amount1*get_slippage()*10**token1.decimals
+        else:
+            amount = amount2*get_slippage()*10**token2.decimals
         args_for_encode = (
             transformed_data["code"],
             transformed_data["token_in"],
@@ -261,7 +269,7 @@ class Ambient(BaseDex):
             420,
             transformed_data["bidTick"],
             transformed_data["askTick"],
-            int(amount1*10**token1.decimals),
+            int(amount),
             transformed_data["limitLower"],
             transformed_data["limitUpper"],
             0,

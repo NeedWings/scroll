@@ -1,6 +1,7 @@
 from random import shuffle, choice
 
 from modules.lends.layer_bank import LayerBank
+from modules.lends.aave import Aave
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseLend
 from modules.utils.token import Token
@@ -16,9 +17,10 @@ class LendingHandler:
     def __init__(self, account: BaseAccount) -> None:
         
         self.layer_bank = LayerBank()
+        self.aave = Aave()
 
     
-        self.lends = [self.layer_bank]
+        self.lends = [self.layer_bank, self.aave]
         self.supported_dexes_for_lend = []
 
         for name in SETTINGS["Lendings"]:
@@ -92,8 +94,7 @@ class LendingHandler:
                 to_borrow = max_to_borrow*get_random_value(SETTINGS["Borrow Percent"])
 
                 to_borrow = to_borrow/lend.get_price(lend.lend_token_from_token[token.symbol], self.account)
-                logger.info(f"[{self.account.address}] going to borrow {to_borrow/1e18} {token.symbol}")
-                txn = lend.create_txn_to_borrow_token(to_borrow/1e18, token, self.account)
+                txn = lend.create_txn_to_borrow_token(to_borrow, token, self.account)
                 if txn == -1:
                     sleeping_sync(self.account.address, True)
                     continue

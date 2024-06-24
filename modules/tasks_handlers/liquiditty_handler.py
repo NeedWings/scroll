@@ -102,7 +102,7 @@ class LiquidityHandler:
                 sleeping_sync(self.account.get_address(), True)
 
     def remove_liquidity(self):
-        dexes = self.supported_dexes_for_liq.copy()
+        dexes = self.liq_dexes.copy()
         shuffle(dexes)
         for dex in dexes:
             dex: BaseDex
