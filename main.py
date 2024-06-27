@@ -98,7 +98,7 @@ def main():
     addresses = f.read().lower().split("\n")
     f.close()
     with open(f"{SETTINGS_PATH}scroll-points.csv", "w") as f:
-        f.write("Address;ETH;USDT;USDC;Total")
+        f.write("Address;ETH;USDT;USDC;Ambient;Nuri;Aave;Rho Markets;Total")
     action = get_action()
     if action == "Encode secrets":
         encode_secrets()

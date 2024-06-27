@@ -46,7 +46,6 @@ class Skydrome(BaseDex):
         if token1.symbol == "ETH":
             native_first = True
         txn_data_handler = TxnDataHandler(sender, "scroll", w3=w3)
-
         approve_txn = token1.get_approve_txn(sender, self.contract_address, int(amount_in*10**token1.decimals), w3=w3)
         deadline = int(time.time()+3600)
 

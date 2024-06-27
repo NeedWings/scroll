@@ -23,11 +23,11 @@ class Ambient(BaseDex):
     name = "Ambient"
     supported_tokens = ["ETH", "USDT", "USDC"]
 
-    base_prices = {
-        "ETH-USDC": 1.2337912104734611e-05,
-        "ETH-USDT": 1.224518807519506e-05,
-        "USDC-USDT": 1
-    }
+    #base_prices = {
+    #    "ETH-USDC": 1.2337912104734611e-05,
+    #    "ETH-USDT": 1.224518807519506e-05,
+    #    "USDC-USDT": 1
+    #}
 
 
 
@@ -70,15 +70,15 @@ class Ambient(BaseDex):
 
         token1_price = token_in.get_price()
         token2_price = token_out.get_price()
-        token1_for_token2_ratio = token1_price/token2_price
-        base_price = self.base_prices[name]
-        current_tick = int(log(token1_for_token2_ratio/base_price, 1.0001))
+        current_spot_price = (token1_price*10**token_out.decimals)/(token2_price*10**token_in.decimals)
+        if in_prioritized:
+            current_spot_price = 1/current_spot_price
+        current_tick = int(log(current_spot_price, 1.0001))
         current_tick = int(current_tick/4) * 4
 
         sqrt_price = sqrt(1.0001**current_tick)
-
-        limitLower = QNumber.from_float(sqrt_price*slippage, 64, 64).value
-        limitUpper = QNumber.from_float(sqrt_price*(2-slippage), 64, 64).value
+        limitLower = QNumber.from_float(sqrt_price*0.9, 64, 64).value
+        limitUpper = QNumber.from_float(sqrt_price*1.1, 64, 64).value
 
 
         if in_prioritized:
@@ -118,26 +118,21 @@ class Ambient(BaseDex):
 
         token1_price = token_in.get_price()
         token2_price = token_out.get_price()
-        token1_for_token2_ratio = token1_price/token2_price
-        if not in_prioritized:
-            token1_for_token2_ratio = 1/token1_for_token2_ratio
-        base_price = self.base_prices[name]
-        current_tick = int(log(token1_for_token2_ratio/base_price, 1.0001))
+        current_spot_price = (token1_price*10**token_out.decimals)/(token2_price*10**token_in.decimals)
+        if in_prioritized:
+            current_spot_price = 1/current_spot_price
+        current_tick = int(log(current_spot_price, 1.0001))
         current_tick = int(current_tick/4) * 4
-
+        print(current_tick)
         sqrt_price = sqrt(1.0001**current_tick)
 
-        limitLower = QNumber.from_float(sqrt_price*slippage, 64, 64).value
-        limitUpper = QNumber.from_float(sqrt_price*(2-slippage), 64, 64).value
+        limitLower = QNumber.from_float(sqrt_price*0.6, 64, 64).value
+        limitUpper = QNumber.from_float(sqrt_price*1.4, 64, 64).value
 
         if full:
             bidTick = 0
             askTick = 0
         else:
-            
-            
-            
-
 
             bidTick = current_tick-int(10000*range)
             askTick = current_tick+int(10000*range)
@@ -145,8 +140,6 @@ class Ambient(BaseDex):
             bidTick = int(bidTick/4) * 4
             askTick = int(askTick/4) * 4
             
-            
-
 
 
         if in_prioritized:
