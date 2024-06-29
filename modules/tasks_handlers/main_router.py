@@ -59,6 +59,9 @@ class MainRouter:
         elif self.task_number == 29:
             other_handler = OtherHandler(self.account)
             other_handler.checkin_rubyscore()
+        elif self.task_number == 32:
+            other_handler = OtherHandler(self.account)
+            other_handler.mint_alpha_key()
         elif self.task_number == 201:
             api_key = SETTINGS["OKX key"]
             secret = SETTINGS["OKX Secret"]

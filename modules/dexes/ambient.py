@@ -112,6 +112,9 @@ class Ambient(BaseDex):
                     break
 
         range = get_random_value(SETTINGS["V3 Liq Range"])
+        if SETTINGS["Low range for stables"]:
+            if token_in.stable and token_out.stable:
+                range = get_random_value([0.0004, 0.0006])
         full = range == 1
         code = 31 if full else 11
         slippage = get_slippage()

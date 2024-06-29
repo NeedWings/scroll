@@ -10,6 +10,8 @@ class PointsChecker:
         self.proxies = self.account.proxies
 
     def wrap(self, data):
+        if data["points"] is None:
+            data["points"] = 0
         return {data["bridge_asset"]: str(round(data["points"], 5)).replace(".", ",")}
     
     def wrap2(self, data):

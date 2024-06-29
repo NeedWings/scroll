@@ -57,6 +57,7 @@ def get_action() -> str:
             "Check In Owlto",
             "Check In RubyScore",
             "Check points",
+            "Mint Alpha Key",
             "",
             "Own Tasks",
             "========================",
