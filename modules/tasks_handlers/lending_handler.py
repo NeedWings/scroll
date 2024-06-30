@@ -2,6 +2,7 @@ from random import shuffle, choice
 
 from modules.lends.layer_bank import LayerBank
 from modules.lends.aave import Aave
+from modules.lends.rho import Rho
 from modules.base_classes.base_account import BaseAccount
 from modules.base_classes.base_defi import BaseLend
 from modules.utils.token import Token
@@ -18,9 +19,11 @@ class LendingHandler:
         
         self.layer_bank = LayerBank()
         self.aave = Aave()
+        self.rho = Rho()
 
     
-        self.lends = [self.layer_bank, self.aave]
+        self.lends = [self.layer_bank, self.aave, self.rho]
+        shuffle(self.lends)
         self.supported_dexes_for_lend = []
 
         for name in SETTINGS["Lendings"]:
@@ -59,7 +62,7 @@ class LendingHandler:
                 sleeping_sync(self.account.get_address(), True)
 
     def remove_from_lend(self):
-        for lend in self.supported_dexes_for_lend.copy():
+        for lend in self.lends.copy():
             for lend_token in lend.lend_tokens:
                 try:
                     balance, human_balance = self.account.get_balance(lend_token)
