@@ -6,6 +6,8 @@ eth = NativeToken("scroll")
 usdt = Token("USDT", "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df", 6, "scroll", stable=True)
 dai = Token("DAI", "0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb", 18, "scroll", stable=True)
 usdc = Token("USDC", "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4", 6, "scroll", stable=True)
+wsteth = Token("WSTETH", "0xf610A9dfB7C89644979b4A0f27063E9e7d7Cda32", 18, "scroll")
+wrseth = Token("WRSETH", "0xa25b25548B4C98B0c7d3d27dcA5D5ca743d68b7F", 18, "scroll")
 
 eth_ethereum = NativeToken("ethereum")
 weth_bsc = Token("ETH", "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", 18, "bsc")
@@ -47,13 +49,15 @@ nets_eth = {
     "base": eth_base
 }
 
-tokens = [eth, usdc, usdt, dai]
+tokens = [eth, usdc, usdt, dai, wsteth, wrseth]
 
 tokens_dict = {
     "ETH": eth,
     "USDC": usdc,
     "USDT": usdt,
-    "DAI": dai
+    "DAI": dai,
+    "WSTETH": wsteth,
+    "WRSETH": wrseth
 }
 
 token_from_contract ={
@@ -61,5 +65,7 @@ token_from_contract ={
     "0x0000000000000000000000000000000000000000": eth,
     usdc.contract_address.lower(): usdc,
     usdt.contract_address.lower(): usdt,
-    dai.contract_address.lower(): dai
+    dai.contract_address.lower(): dai,
+    wsteth.contract_address.lower(): wsteth,
+    wrseth.contract_address.lower(): wrseth
 }

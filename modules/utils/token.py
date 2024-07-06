@@ -86,6 +86,19 @@ class Token():
                 else:
                     print(f'Cant get response from binance, tring again...')
                     sleep(5)
+        elif self.symbol == "WRSETH":
+            def __find__(ticker: str, rates: list):
+                for k in rates:
+                    name = k.get("symbol")
+                    if name == ticker.upper() + 'USDT':
+                        return float(k.get("price"))
+            while True:
+                response = req("https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd&ids=wrapped-rseth")
+                if type(response) is dict:
+                    return response["wrapped-rseth"]["usd"]
+                else:
+                    print(f'Cant get response from binance, tring again...')
+                    sleep(5)
         else:
             def __find__(ticker: str, rates: list):
                 for k in rates:

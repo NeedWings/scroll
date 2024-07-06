@@ -8,7 +8,7 @@
 
     "========== Own Tasks ==========": "",
 
-        "own tasks": [23, 3, 22],
+        "own tasks": [24, 3],
         "own tasks mode" : "invert",
 
     "============ Bridge =============": "",
@@ -43,15 +43,15 @@
 
     "============ Activity ============": "",
 
-        "Supported Dexes"   : ["Skydrome", "Ambient", "ScrollSwap", "SyncSwap", "SpaceFi", "SushiSwap"],
-        "Swaps Percent"     : [0.5, 0.6],
-        "SwapsTokens"       : ["USDC", "USDT", "ETH"],
-        "To Save Funds"     : ["USDT", "USDC", "ETH"],
-        "Swaps Amount"      : [3, 6],
+        "Supported Dexes"   : ["Ambient"],
+        "Swaps Percent"     : [0.8, 0.9],
+        "SwapsTokens"       : [ "ETH", "WRSETH"],
+        "To Save Funds"     : [ "ETH"],
+        "Swaps Amount"      : [1, 1],
         "Save Eth Amount"   : [0.005, 0.008],
 
         "Liquidity Dexes"        : ["Ambient"],
-        "Liquidity Work Percent" : [0.9, 0.95],
+        "Liquidity Work Percent" : [0.7, 0.75],
         "Add Liquidity Amount"   : [1, 1],
         "V3 Liq Range"           : [0.04, 0.06],
         "Low range for stables"  : true,
@@ -108,7 +108,9 @@
     "===============  Balance Settings ===============": "",
         "Minimal Token Balance": {
             "USDC": 1,
-            "USDT": 1
+            "USDT": 1,
+            "WSTETH": 0.0001,
+            "WRSETH": 0.0001
         }
 
 }
