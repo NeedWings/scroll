@@ -62,6 +62,12 @@ class MainRouter:
         elif self.task_number == 32:
             other_handler = OtherHandler(self.account)
             other_handler.mint_alpha_key()
+        elif self.task_number == 33:
+            other_handler = OtherHandler(self.account)
+            other_handler.scroll_canvas.mint_canvas()
+        elif self.task_number == 34:
+            other_handler = OtherHandler(self.account)
+            other_handler.mint_badges()
         elif self.task_number == 201:
             api_key = SETTINGS["OKX key"]
             secret = SETTINGS["OKX Secret"]

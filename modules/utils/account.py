@@ -72,7 +72,7 @@ class Account(BaseAccount):
     def send_without_wait(self, txn, net):
         self.wait_for_better_eth_gwei()
             
-        w3 = self.w3[net]
+        w3: Web3 = self.w3[net]
 
         gasEstimate = w3.eth.estimate_gas(txn)
 

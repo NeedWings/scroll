@@ -60,6 +60,8 @@ class Starter:
         "Check In Owlto": 28,
         "Check In RubyScore": 29,
         "Mint Alpha Key": 32,
+        "Mint Canvas": 33,
+        "Mint Badges": 34,
         "Withdraw from Rhino to Scroll": 5,
         "Bridge from arb/opti to eth": 30,
         "Off Bridge": 31,

@@ -58,6 +58,8 @@ def get_action() -> str:
             "Check In RubyScore",
             "Check points",
             "Mint Alpha Key",
+            "Mint Canvas",
+            "Mint Badges",
             "",
             "Own Tasks",
             "========================",

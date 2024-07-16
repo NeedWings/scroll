@@ -7,6 +7,7 @@ from modules.other.zkstars import ZkStars
 from modules.other.check_in import CheckIn
 from modules.other.alpha_key import AlphaKey
 from modules.other.points_checker import PointsChecker
+from modules.other.scroll_canvas import ScrollCanvas
 from modules.config import SETTINGS
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.Logger import logger
@@ -22,6 +23,10 @@ class OtherHandler:
         self.account = account
         self.checker = PointsChecker(self.account)
         self.alpha_key = AlphaKey(self.account)
+        self.scroll_canvas = ScrollCanvas(self.account)
+
+    def mint_badges(self):
+        self.scroll_canvas.handle()
 
     def dmail(self):
         for _ in range(get_random_value_int(SETTINGS["Use dmail times"])):
