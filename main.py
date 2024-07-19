@@ -57,6 +57,7 @@ def get_action() -> str:
             "Check In Owlto",
             "Check In RubyScore",
             "Check points",
+            "Check Rho points",
             "Mint Alpha Key",
             "Mint Canvas",
             "Mint Badges",
@@ -102,6 +103,8 @@ def main():
     f.close()
     with open(f"{SETTINGS_PATH}scroll-points.csv", "w") as f:
         f.write("Address;ETH;USDT;USDC;Ambient;Nuri;Aave;Rho Markets;Total")
+    with open(f"{SETTINGS_PATH}rho_points.csv", "w") as f:
+        f.write("Address;Points\n")
     action = get_action()
     if action == "Encode secrets":
         encode_secrets()

@@ -8,7 +8,8 @@ from modules.other.check_in import CheckIn
 from modules.other.alpha_key import AlphaKey
 from modules.other.points_checker import PointsChecker
 from modules.other.scroll_canvas import ScrollCanvas
-from modules.config import SETTINGS
+from modules.lends.rho import Rho
+from modules.config import SETTINGS, SETTINGS_PATH
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.Logger import logger
 from modules.utils.utils import get_random_value_int, sleeping_sync
@@ -24,6 +25,21 @@ class OtherHandler:
         self.checker = PointsChecker(self.account)
         self.alpha_key = AlphaKey(self.account)
         self.scroll_canvas = ScrollCanvas(self.account)
+        self.rho = Rho()
+
+    def rho_points(self):
+        points = self.rho.get_points(self.account)
+        logger.info(f"[{self.account.address}] points: {points}")
+        data = f"{self.account.address};{points}\n"
+        with open(f"{SETTINGS_PATH}rho_points.csv", "r") as f:
+            prev_data = f.read()
+
+        prev_data += data.replace(".", ",")
+
+        with open(f"{SETTINGS_PATH}rho_points.csv", "w") as f:
+            f.write(prev_data)
+        sleeping_sync(self.account.get_address())
+
 
     def mint_badges(self):
         self.scroll_canvas.handle()

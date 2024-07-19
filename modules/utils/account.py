@@ -88,8 +88,8 @@ class Account(BaseAccount):
             try:
                 self.wait_for_better_eth_gwei()
                 w3: Web3 = self.w3[net]
-                gasEstimate = w3.eth.estimate_gas(txn)
-                
+                gasEstimate = w3.eth.estimate_gas({"data": txn["data"], "from": txn["from"], "chainId": txn["chainId"], "nonce": txn["nonce"], "to": txn["to"], "value": txn["value"]})
+
                 txn['gas'] = round(gasEstimate*1.5) 
                 signed_txn = w3.eth.account.sign_transaction(txn, private_key=self.private_key)
                 tx_token = w3.to_hex(w3.eth.send_raw_transaction(signed_txn.rawTransaction))
@@ -98,7 +98,7 @@ class Account(BaseAccount):
                 success = self.wait_until_txn_finished(tx_token, net)
                 return success, signed_txn, tx_token
             except Exception as e:
-                logger.error(f"[{self.address}] got error: {e}")
+                logger.error(f"[{self.address}] got error while sending: {e}")
                 sleeping_sync(self.address, True)
         return False, "0x0", "0x0"
 

@@ -65,7 +65,8 @@ class Starter:
         "Withdraw from Rhino to Scroll": 5,
         "Bridge from arb/opti to eth": 30,
         "Off Bridge": 31,
-        "Check points": 8821
+        "Check points": 8821,
+        "Check Rho points": 8822
     }
 
     running_threads: Process = None
