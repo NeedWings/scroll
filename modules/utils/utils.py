@@ -63,6 +63,8 @@ def req(url: str, **kwargs):
             if resp.status_code == 200:
                 return resp.json()
             else:
+                print(resp.status_code)
+                print(resp.text)
                 console_log.error("Bad status code, will try again")
                 pass
         except Exception as error:

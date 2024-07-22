@@ -62,7 +62,7 @@ class LendingHandler:
                 sleeping_sync(self.account.get_address(), True)
 
     def remove_from_lend(self):
-        for lend in self.lends.copy():
+        for lend in self.supported_dexes_for_lend.copy():
             for lend_token in lend.lend_tokens:
                 try:
                     balance, human_balance = self.account.get_balance(lend_token)

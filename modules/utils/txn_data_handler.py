@@ -49,7 +49,7 @@ class TxnDataHandler:
 
         if self.net_name in ["avalanche", "polygon", "arbitrum", "ethereum", "base", "optimism", "linea", "scroll"]:
             data["type"] = "0x2"
-            data["maxFeePerGas"] = int(gas_price*SETTINGS["Gas Price Coeff"])
+            data["maxFeePerGas"] = int(gas_price*10)
             if self.net_name == "polygon":
                 data["maxPriorityFeePerGas"] = Web3.to_wei(30, "gwei")
             elif self.net_name == "avalanche" or self.net_name == "base" or self.net_name == "optimism" or self.net_name == "linea":
@@ -59,7 +59,9 @@ class TxnDataHandler:
             elif self.net_name == "arbitrum":
                 data["maxPriorityFeePerGas"] = Web3.to_wei(0.01, "gwei")
             elif self.net_name == "scroll":
-                data["maxPriorityFeePerGas"] = int(gas_price*SETTINGS["Gas Price Coeff"]/10)
+                data["maxPriorityFeePerGas"] = int(gas_price)
+        else:
+            data["gas_price"] = gas_price
         
 
 

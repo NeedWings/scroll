@@ -3,6 +3,7 @@ import time
 from random import choice
 
 from web3 import Web3
+from web3.middleware import geth_poa_middleware
 from eth_account import Account as ethAccount
 
 from modules.base_classes.base_account import BaseAccount
@@ -48,6 +49,7 @@ class Account(BaseAccount):
         else:
             for chain in RPC_LIST:
                 self.w3[chain] =  Web3(Web3.HTTPProvider(choice(RPC_LIST[chain])))
+
     
     def get_balance(self, token: Token):
         return token.balance_of(self.address, w3=self.get_w3(token.net_name))
@@ -89,7 +91,25 @@ class Account(BaseAccount):
                 self.wait_for_better_eth_gwei()
                 w3: Web3 = self.w3[net]
                 gasEstimate = w3.eth.estimate_gas({"data": txn["data"], "from": txn["from"], "chainId": txn["chainId"], "nonce": txn["nonce"], "to": txn["to"], "value": txn["value"]})
+                
+                gas_price = self.get_w3(net).eth.gas_price
+                if net in ["avalanche", "polygon", "arbitrum", "ethereum", "base", "optimism", "linea", "scroll"]:
+                    txn["type"] = "0x2"
+                    txn["maxFeePerGas"] = int(gas_price*SETTINGS["Gas Price Coeff"])
+                    if net == "polygon":
+                        txn["maxPriorityFeePerGas"] = Web3.to_wei(30, "gwei")
+                    elif net == "avalanche" or net == "base" or net == "optimism" or net == "linea":
+                        txn["maxPriorityFeePerGas"] = gas_price
+                    elif net == "ethereum":
+                        txn["maxPriorityFeePerGas"] = Web3.to_wei(0.05, "gwei")
+                    elif net == "arbitrum":
+                        txn["maxPriorityFeePerGas"] = Web3.to_wei(0.01, "gwei")
+                    elif net == "scroll":
+                        txn["maxPriorityFeePerGas"] = int(gas_price*SETTINGS["Gas Price Coeff"]/10)
+                else:
+                    txn["gasPrice"] = gas_price 
 
+        
                 txn['gas'] = round(gasEstimate*1.5) 
                 signed_txn = w3.eth.account.sign_transaction(txn, private_key=self.private_key)
                 tx_token = w3.to_hex(w3.eth.send_raw_transaction(signed_txn.rawTransaction))
