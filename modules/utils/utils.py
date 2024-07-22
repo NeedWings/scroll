@@ -56,7 +56,7 @@ def req_post(url: str, **kwargs):
         time.sleep(get_random_value(SETTINGS["Error Sleep"]))
 
 
-def req(url: str, **kwargs):
+def req(url: str, return_on_fail=False, **kwargs):
     while True:
         try:
             resp = requests.get(url, **kwargs)
@@ -69,6 +69,8 @@ def req(url: str, **kwargs):
                 pass
         except Exception as error:
             console_log.error(f"Requests error: {error}")
+        if return_on_fail:
+            return None
         time.sleep(get_random_value(SETTINGS["Error Sleep"]))
 
 def get_random_string(length: int) -> str:

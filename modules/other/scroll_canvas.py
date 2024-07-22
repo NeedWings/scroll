@@ -54,7 +54,9 @@ class ScrollCanvas:
         eligble = []
 
         for badge in self.badges:
-            resp = req(f"{badge}{self.account.address}", proxies=self.account.proxies)
+            resp = req(f"{badge}{self.account.address}", return_on_fail=True, proxies=self.account.proxies)
+            if resp is None:
+                continue
             eligibility = resp["eligibility"]
             if eligibility:
                 eligble.append(badge)
