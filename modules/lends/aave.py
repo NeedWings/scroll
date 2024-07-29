@@ -5,6 +5,7 @@ from modules.base_classes.base_account import BaseAccount
 from modules.utils.token import Token
 from modules.utils.token_stor import tokens_dict
 from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.token_stor import eth, usdc
 from modules.utils.utils import sleeping_sync, get_random_value_int
 from modules.config import SETTINGS
 from modules.utils.Logger import logger
@@ -31,6 +32,11 @@ class Aave(BaseLend):
     borrow_token_from_lend_token = {
         "aETH": borrow_tokens[0],
         "aUSDC": borrow_tokens[1],
+    }
+
+    token_from_lend_token = {
+        lend_tokens[0]: eth,
+        lend_tokens[1]: usdc
     }
 
     supply_coeffs = {

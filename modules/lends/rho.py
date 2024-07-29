@@ -7,6 +7,7 @@ from modules.base_classes.base_defi import BaseLend
 from modules.base_classes.base_account import BaseAccount
 from modules.utils.token import Token
 from modules.utils.txn_data_handler import TxnDataHandler
+from modules.utils.token_stor import eth, usdc, usdt
 from modules.utils.utils import sleeping_sync, req_post
 from modules.utils.Logger import logger
 true = True
@@ -33,6 +34,12 @@ class Rho(BaseLend):
         "0x639355f34Ca9935E0004e30bD77b9cE2ADA0E692": 0.7,
         "0xAE1846110F72f2DaaBC75B7cEEe96558289EDfc5": 0.7,
         "0x855CEA8626Fa7b42c13e7A688b179bf61e6c1e81": 0.8
+    }
+
+    token_from_lend_token = {
+        lend_tokens[0]: eth,
+        lend_tokens[1]: usdc,
+        lend_tokens[2]: usdt
     }
 
     lend_token_from_token = {

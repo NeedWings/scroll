@@ -3,6 +3,7 @@ from modules.base_classes.base_account import BaseAccount
 from modules.utils.token import Token
 from modules.utils.txn_data_handler import TxnDataHandler
 from modules.utils.utils import sleeping_sync
+from modules.utils.token_stor import eth, usdc
 from modules.utils.Logger import logger
 true = True
 false = False
@@ -17,6 +18,11 @@ class LayerBank(BaseLend):
         Token("lETH", "0x274C3795dadfEbf562932992bF241ae087e0a98C", 18, "scroll"),
         Token("lUSDC", "0x0D8F8e271DD3f2fC58e5716d3Ff7041dBe3F0688", 18, "scroll"),
     ]
+
+    token_from_lend_token = {
+        lend_tokens[0]: eth,
+        lend_tokens[1]: usdc
+    }
 
     supply_coeffs = {
         "lETH": 0.7,

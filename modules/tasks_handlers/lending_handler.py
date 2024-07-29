@@ -66,7 +66,11 @@ class LendingHandler:
             for lend_token in lend.lend_tokens:
                 try:
                     balance, human_balance = self.account.get_balance(lend_token)
-                    if balance > 10000:
+                    token = lend.token_from_lend_token[lend_token]
+                    if lend.name == "LayerBank":
+                        human_balance = balance/10**token.decimals
+                    usd_value = token.get_usd_value(human_balance)
+                    if usd_value > SETTINGS["Minimum to wihdraw from lend"]:
                         logger.info(f"[{self.account.address}] going to remove {lend_token.symbol} from {lend.name}")
                         txn = lend.create_txn_for_removing_token(lend_token, self.account)
                         if txn == -1:
@@ -75,7 +79,7 @@ class LendingHandler:
                         self.account.send_txn(txn, "scroll")
                         sleeping_sync(self.account.address)
                     else:
-                        logger.info(f"[{self.account.address}] {lend_token.symbol} balance is 0. Skip")
+                        logger.info(f"[{self.account.address}] {lend_token.symbol} balance is lower than Minimum to wihdraw from lend. Skip")
 
                         
                 except Exception as e:

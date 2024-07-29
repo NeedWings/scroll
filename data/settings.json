@@ -8,7 +8,7 @@
 
     "========== Own Tasks ==========": "",
 
-        "own tasks": [24, 3],
+        "own tasks": [3, 4],
         "own tasks mode" : "invert",
 
     "============ Bridge =============": "",
@@ -45,8 +45,8 @@
 
         "Supported Dexes"   : ["Ambient"],
         "Swaps Percent"     : [0.8, 0.9],
-        "SwapsTokens"       : [ "ETH", "WRSETH"],
-        "To Save Funds"     : [ "ETH"],
+        "SwapsTokens"       : [ "ETH", "WRSETH", "USDT", "USDC", "WSTETH"],
+        "To Save Funds"     : [ "ETH", "WRSETH", "USDT", "USDC", "WSTETH"],
         "Swaps Amount"      : [1, 1],
         "Save Eth Amount"   : [0.005, 0.008],
 
@@ -58,12 +58,13 @@
         "Lendings"              : ["Rho"],
         "Add To Lend Times"     : [1, 1],
         "Borrow Times"          : [1, 1],
+        "Minimum to wihdraw from lend": 10,
         "Add To Lend Percent"   : [0.95, 0.97],
         "Borrow Percent"        : [0.6, 0.8],
         "Lend Tokens"           : ["ETH", "USDC", "USDT"],
 
 
-        "Gas Price Coeff": 3,
+        "Gas Price Coeff": 1.2,
         "Use dmail times": [1, 3],
         "ZkSars Mints Amount": [1, 3],
         "Do not mint minted" : true,
@@ -73,8 +74,8 @@
 
 
     "===== Threads settings =====": "",
-        "Error Sleep"     : [1, 1],
-        "Thread Runner Sleep" : [123, 321],
+        "Error Sleep"     : [50, 80],
+        "Thread Runner Sleep" : [323, 821],
         "Task Sleep"         : [50, 80],
         "Approve Sleep"      : [50, 80],
 
