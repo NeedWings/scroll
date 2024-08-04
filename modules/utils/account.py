@@ -90,7 +90,12 @@ class Account(BaseAccount):
             try:
                 self.wait_for_better_eth_gwei()
                 w3: Web3 = self.w3[net]
-                gasEstimate = w3.eth.estimate_gas({"data": txn["data"], "from": txn["from"], "chainId": txn["chainId"], "nonce": txn["nonce"], "to": txn["to"], "value": txn["value"]})
+                if txn.get("data") is None:
+                    B = {"from": txn["from"], "chainId": txn["chainId"], "nonce": txn["nonce"], "to": txn["to"], "value": txn["value"]}
+                else:
+                    B = {"data": txn.get("data"), "from": txn["from"], "chainId": txn["chainId"], "nonce": txn["nonce"], "to": txn["to"], "value": txn["value"]}
+
+                gasEstimate = w3.eth.estimate_gas(B)
                 
                 gas_price = self.get_w3(net).eth.gas_price
                 if net in ["avalanche", "polygon", "arbitrum", "ethereum", "base", "optimism", "linea", "scroll"]:

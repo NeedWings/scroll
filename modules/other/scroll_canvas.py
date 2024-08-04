@@ -17,7 +17,24 @@ class ScrollCanvas:
         "https://ambient-scroll-badge.liquidity.tools/api/check?badge=0x21C5E85eBCbd924BA633D4A7A5F2718f25C713D8&recipient=",
         "https://ambient-scroll-badge.liquidity.tools/api/check?badge=0x7bD1AEADCc59EedaF4775E4D3197Ce9a7031BD01&recipient=",
         "https://zebra.xyz/api/badge/check?badge=0x09E14E520eec3583681Fe225a4B506743EC3cc78&recipient=",
-        "https://api.scrolly.xyz/api/badge/check?badge=0x79b4f7492328D0Cc4ED0Ddaee08Cd42f0F36A4CC&recipient="
+        "https://api.scrolly.xyz/api/badge/check?badge=0x79b4f7492328D0Cc4ED0Ddaee08Cd42f0F36A4CC&recipient=",
+        "https://pencilsprotocol.io/api/scroll/canvas/badge/pencil/check?badge=0x766e3f1EE86439DE0597F6e917F980A4e5d187A3&recipient=",
+        "https://pencilsprotocol.io/api/scroll/canvas/badge/pencil/check?badge=0x2d8E67c1427a1ebb9ddB5c4D38143140B0c19aC8&recipient=",
+        "https://vwb06c8e7h.execute-api.us-east-1.amazonaws.com/dev/check?badge=0x9aD600bDD45Cc30242fd905872962dc415F68530&recipient=",
+        "https://passport-iam.gitcoin.co/scroll/check?badge=0xa623f348A12cFdC6B64a8c9e883dD9B243438E79&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0xB936740f00FFA90a55C362C33840913eaCFDcE25&recipient=",
+        "https://mp.trustalabs.ai/attestations/media_badge/check?badge=0x47FF789Da49686C6cC38998F76F78A12A5939082&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0xaE98FC0e46977DaF650B180041dB20155ac66277&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x3c1A82D5877AB970Be9d80AB8185C5F9F1505C49&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x66703cd7eBA1b114cA652b1C2DE268858cBedEc8&recipient=",
+        "https://scroll-canvas-api.xname.app/api/check?badge=0x7C0deB6aBf29cC829186933720af67da8B1EF633&recipient=",
+        "https://scroll-canvas-api.xname.app/api/domain/check?badge=0xed269A526ad793CcB671Ef55A7AF6E45F300d462&recipient=",
+        "https://api.omnihub.xyz/api/integration/scroll/check?badge=0xdd8CCDad022999afD61DFda146e4C40F47dE4Eec&recipient=",
+        "https://mp.trustalabs.ai/attestations/poh_badge/check?badge=0x26B97C832C04C06cAd34dCE23c701beDC3555a5c&recipient=",
+        "https://backend.retrobridge.io/api/quest/check?badge=0x59700c6Ed282eD7611943129f226914ACBB3982b&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x0a584c042133aF17f3e522F09A77Ee1496f3a567&recipient=",
+        "https://api.smilecobra.io/tripartite/scroll/badge/check?badge=0x7ecf596Ed5fE6957158cD626b6bE2A667267424f&recipient=",
+        "https://publicapi.xenobunny.xyz/canvas/lands/check?badge=0x7188B352C818f291432CDe8E4B1f0576c188F9e4&recipient="
     ]
 
 
