@@ -34,7 +34,17 @@ class ScrollCanvas:
         "https://backend.retrobridge.io/api/quest/check?badge=0x59700c6Ed282eD7611943129f226914ACBB3982b&recipient=",
         "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x0a584c042133aF17f3e522F09A77Ee1496f3a567&recipient=",
         "https://api.smilecobra.io/tripartite/scroll/badge/check?badge=0x7ecf596Ed5fE6957158cD626b6bE2A667267424f&recipient=",
-        "https://publicapi.xenobunny.xyz/canvas/lands/check?badge=0x7188B352C818f291432CDe8E4B1f0576c188F9e4&recipient="
+        "https://publicapi.xenobunny.xyz/canvas/lands/check?badge=0x7188B352C818f291432CDe8E4B1f0576c188F9e4&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0xB69cF3247b60F72ba560B3C1e0F53DAF9e9D5201&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x35CB802ede5f970AE6d7B8E7b7b82C82Fea273C7&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x4445BE64c03154052bd661fD1B0d01FC625Df06E&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x475d1E9Be98B7B7b97D7ED9695541A0209e982dE&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0xCA5d53f143822dd8b9789b1A12d2a10A39a499e4&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x9765B7B7926Cb27b84f5F48EA0758Fa99da3C7d6&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x6d352E2987C0AC7D896B74453f400477dE7446F0&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x5bA1cC19C89BeD7d4660316D1eB41B6A581B98c7&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0xCd223ce0Cc6C05c1604f8f83A50e98202E600bD6&recipient=",
+        "https://api.symbiosis.finance/crosschain/v1/scroll-badge/check?badge=0x3573335B5128F50F79617f1218f2A7aA0EE68703&recipient="
     ]
 
 
@@ -69,6 +79,7 @@ class ScrollCanvas:
     def get_eligble_badges(self):
         logger.info(f"[{self.account.address}] checking for eligble badges")
         eligble = []
+        w3 = self.account.get_w3("scroll")
 
         for badge in self.badges:
             resp = req(f"{badge}{self.account.address}", return_on_fail=True, proxies=self.account.proxies)
@@ -76,9 +87,12 @@ class ScrollCanvas:
                 continue
             eligibility = resp["eligibility"]
             if eligibility:
+                data = w3.eth.call({"to": badge.split('?')[1].split('=')[1].split('&')[0], "data": f"0x5e50864f000000000000000000000000{self.account.address[2::].lower()}"})
+                have_minted = decode(["bool"], data)[0]
+                if have_minted:
+                    continue
                 eligble.append(badge)
 
-        w3 = self.account.get_w3("scroll")
         data = w3.eth.call({"to": "0x74670A3998d9d6622E32D0847fF5977c37E0eC91", "data": f"0x70a08231000000000000000000000000{self.account.address[2::].lower()}"})
         amount = decode(["uint256"], data)[0]
         if amount > 0:
