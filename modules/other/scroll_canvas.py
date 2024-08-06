@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, shuffle
 
 from eth_abi import decode, encode
 
@@ -139,7 +139,7 @@ class ScrollCanvas:
     def handle(self):
 
         eligble = self.get_eligble_badges()
-
+        shuffle(eligble)
         for badge in eligble:
             try:
                 if badge == "origins":
