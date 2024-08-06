@@ -12,16 +12,16 @@
         "own tasks mode" : "invert",
 
     "============ Bridge =============": "",
-        "Bridge Type"          : ["Rhino", "Owlto", "Orbiter", "RouterNitro"],
+        "Bridge Type"          : ["Owlto"],
         "Eth To Bridge"        : [0.001, 0.0015],
         "Bridge All Balance"   : true,
         "Bridge Save"          : [0.002, 0.0034],
         "Bridge From"          : ["arbitrum"],
 
-        "Eth To Withdraw"      : [0.012, 0.013],
-        "Withdraw All Balance" : true,
-        "Save When Withdraw"   : [0.001, 0.0012],
-        "Withdraw To"          : ["arbitrum"],
+        "Eth To Withdraw"      : [0.001, 0.00136678],
+        "Withdraw All Balance" : false,
+        "Save When Withdraw"   : [0, 0],
+        "Withdraw To"          : ["base"],
 
 
     "=============== OKX ===============": "",
@@ -71,13 +71,14 @@
         "Ref for ZkStars": "",
         "Use Ref for Canvas": false,
         "Ref for Canvas": ["ALLWV"],
+        "Mint Badges in random order": false,
 
 
     "===== Threads settings =====": "",
-        "Error Sleep"     : [50, 80],
-        "Thread Runner Sleep" : [323, 821],
-        "Task Sleep"         : [50, 80],
-        "Approve Sleep"      : [50, 80],
+        "Error Sleep"     : [10, 30],
+        "Thread Runner Sleep" : [40, 70],
+        "Task Sleep"         : [10, 30],
+        "Approve Sleep"      : [10, 30],
 
 
     "===============  RPC Settings ===============": "",

@@ -139,7 +139,8 @@ class ScrollCanvas:
     def handle(self):
 
         eligble = self.get_eligble_badges()
-        shuffle(eligble)
+        if SETTINGS["Mint Badges in random order"]:
+            shuffle(eligble)
         for badge in eligble:
             try:
                 if badge == "origins":
