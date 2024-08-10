@@ -11,7 +11,7 @@ from modules.config import SETTINGS
 class ScrollCanvas:
 
     badges = [
-     
+     "https://canvas.scroll.cat/badge/check?badge=0x3dacAd961e5e2de850F5E027c70b56b5Afa5DfeD&recipient="
     ]
 
 
