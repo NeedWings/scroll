@@ -54,12 +54,12 @@ class LiquidityHandler:
         for i in range(liq_amount):
             try:
                 dex: BaseDex = choice(self.supported_dexes_for_liq)
-                token1, usd_value = token_checker.get_max_valued_token(self.account, self.supported_tokens_str_to_token(dex.supported_tokens))
-                if token1 == None:
+                token1, usd_value = token_checker.get_max_valued_token(self.account, self.supported_tokens_str_to_token(dex.supported_liq_tokens))
+                if token1 is None:
                     logger.error(f"[{self.account.get_address()}] all balances is 0")
                     continue
                 token1: Token = token1
-                token2 = dex.get_pair_for_token(token1.symbol)
+                token2 = dex.get_liq_pair_for_token(token1.symbol)
 
                 if token2 == -5:
                     continue
