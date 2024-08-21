@@ -8,7 +8,7 @@
 
     "========== Own Tasks ==========": "",
 
-        "own tasks": [3, 4],
+        "own tasks": [24, 3, 4],
         "own tasks mode" : "invert",
 
     "============ Bridge =============": "",
@@ -46,7 +46,8 @@
         "Supported Dexes"   : ["Ambient"],
         "Swaps Percent"     : [0.8, 0.9],
         "SwapsTokens"       : [ "ETH", "WRSETH", "USDT", "USDC", "WSTETH"],
-        "To Save Funds"     : [ "ETH", "WRSETH", "USDT", "USDC", "WSTETH"],
+        "LiqTokens"       : [ "ETH", "USDT", "USDC"],
+        "To Save Funds"     : [ "ETH"],
         "Swaps Amount"      : [1, 1],
         "Save Eth Amount"   : [0.005, 0.008],
 
