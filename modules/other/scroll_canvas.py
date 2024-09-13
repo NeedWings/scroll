@@ -50,7 +50,7 @@ class ScrollCanvas:
         all_badges = req("https://badge-registry.canvas.scroll.cat/badges?page_number=1&sort=minted&category=all&page_size=200", proxies=self.account.proxies)
 
         for badge in all_badges["data"]:
-            link = badge.get("baseUrl")
+            link = badge.get("baseURL")
             contract = badge.get("badgeContract")
             if link is None or contract is None:
                 continue
@@ -61,6 +61,7 @@ class ScrollCanvas:
 
         for badge in self.badges:
             resp = req(f"{badge}{self.account.address}", return_on_fail=True, proxies=self.account.proxies)
+            #logger.info(f"[{self.account.address}] {badge}: {resp}")
             if resp is None:
                 continue
             eligibility = resp.get("eligibility")
