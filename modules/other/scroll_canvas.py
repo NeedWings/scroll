@@ -47,9 +47,9 @@ class ScrollCanvas:
 
 
         logger.info(f"[{self.account.address}] checking for eligble badges")
-        all_badges = req("https://raw.githubusercontent.com/scroll-tech/canvas-badges/main/scroll.badgelist.json", proxies=self.account.proxies)
+        all_badges = req("https://badge-registry.canvas.scroll.cat/badges?page_number=1&sort=minted&category=all&page_size=200", proxies=self.account.proxies)
 
-        for badge in all_badges["badges"]:
+        for badge in all_badges["data"]:
             link = badge.get("baseUrl")
             contract = badge.get("badgeContract")
             if link is None or contract is None:

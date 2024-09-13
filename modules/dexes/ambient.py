@@ -248,7 +248,7 @@ class Ambient(BaseDex):
             420,
             transformed_data["isBuy"],
             transformed_data["isBaseQty"],
-            int(amount_in*10**token1.decimals),
+            int(0.9999*amount_in*10**token1.decimals),
             0,
             transformed_data["limitPrice"],
             int(get_slippage()*amount_out*10**token2.decimals),

@@ -92,7 +92,7 @@ class SwapsHandler:
                 if token_to_swap.symbol == "ETH":
                     balance -= int(get_random_value(SETTINGS["Save Eth Amount"])*1e18)
 
-                if balance <= 0:
+                if balance/10**token_to_swap.decimals <= SETTINGS["Minimal Token Balance"][token_to_swap.symbol]:
                     logger.info(f"[{self.account.get_address()}] {token_to_swap.symbol} balance 0 or less MinTokensBalances. skip")
                     continue
                 selected = False
