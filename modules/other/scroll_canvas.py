@@ -88,7 +88,7 @@ class ScrollCanvas:
         txn_data_handler = TxnDataHandler(self.account, "scroll", w3=w3)
 
         if badge != "origins":
-            mint_data = req(f"{badge.replace('check', 'claim')}{self.account.address}", proxies=self.account.proxies)
+            mint_data = req(f"{badge.replace('check', 'claim')}{self.account.address}", return_on_fail=True, proxies=self.account.proxies)
 
             if mint_data["message"] != "success":
                 logger.info(mint_data)
