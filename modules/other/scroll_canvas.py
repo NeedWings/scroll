@@ -10,14 +10,15 @@ from modules.config import SETTINGS
 
 class ScrollCanvas:
 
-    badges = [
-     "https://canvas.scroll.cat/badge/check?badge=0x3dacAd961e5e2de850F5E027c70b56b5Afa5DfeD&recipient="
-    ]
+
 
 
 
     def __init__(self, account: BaseAccount) -> None:
         self.account = account
+        self.badges = [
+        "https://canvas.scroll.cat/badge/check?badge=0x3dacAd961e5e2de850F5E027c70b56b5Afa5DfeD&recipient="
+        ]
 
     def mint_canvas(self):
         logger.info(f"[{self.account.address}] going to mint canvas")
@@ -48,7 +49,7 @@ class ScrollCanvas:
 
         logger.info(f"[{self.account.address}] checking for eligble badges")
         all_badges = req("https://badge-registry.canvas.scroll.cat/badges?page_number=1&sort=minted&category=all&page_size=200", proxies=self.account.proxies)
-
+        #logger.info(f"[{self.account.address}] total_badges: {len(all_badges['data'])}")
         for badge in all_badges["data"]:
             link = badge.get("baseURL")
             contract = badge.get("badgeContract")
@@ -58,7 +59,7 @@ class ScrollCanvas:
         
         eligble = []
         w3 = self.account.get_w3("scroll")
-
+        #logger.info(f"[{self.account.address}] total_badges: {len(self.badges)}")
         for badge in self.badges:
             resp = req(f"{badge}{self.account.address}", return_on_fail=True, proxies=self.account.proxies)
             #logger.info(f"[{self.account.address}] {badge}: {resp}")
