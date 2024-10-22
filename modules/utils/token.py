@@ -34,6 +34,20 @@ class Token():
                 logger.error(f"[{address}] can't get balance of {self.symbol}: {e}")
                 sleeping_sync(address, True)
     
+    def check_allowance(self, spender, user, w3=None):
+        if w3:
+            self.w3 = w3
+        else:
+            w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
+        contract = w3.eth.contract(self.contract_address, abi=ABI)
+        while True:
+            try:
+                allowance = contract.functions.allowance(user, spender).call()
+                return allowance
+            except Exception as e:
+                logger.error(f"[{user}] can't get allowance of {self.symbol}: {e}")
+                sleeping_sync(user, True)
+
     def transfer(self, sender: BaseAccount, to: str, amount: int = None, w3 = None):
         if amount is None:
             amount = self.balance_of(sender.address)[0]
@@ -69,6 +83,9 @@ class Token():
         else:
             w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
+        allowance = self.check_allowance(spender, sender.address, w3=w3)
+        if allowance > amount:
+            return
         for i in range(5):
             try:
                 logger.info(f"[{sender.address}] going to approve {self.symbol}")
