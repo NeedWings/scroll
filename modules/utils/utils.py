@@ -16,6 +16,27 @@ def get_random_value_int(param):
 def get_random_value(param):
     return random.uniform(float(param[0]), float(param[1]))
 
+def change_proxies_ip(proxies: dict, change_url: str):
+    def __get_current_ip__():
+        while True:
+            try:
+                return requests.get("https://api.ipify.org?format=json", proxies=proxies).json()["ip"]
+            except Exception as error:
+                console_log.error(f'Failed to get ip: {error}')
+                time.sleep(5)
+    old_ip = __get_current_ip__()
+    console_log.info(f'Old ip address: {old_ip}')
+    while old_ip == __get_current_ip__():
+        try:
+            response = requests.post(change_url).json()
+            console_log.info(f'Change ip response: {response}')
+        except Exception as error:
+            console_log.error(f'Failed to change ip: {error}')
+        
+        time.sleep(5)
+    
+    console_log.info(f'New ip address: {__get_current_ip__()}')
+
 def sleeping_sync(address, error = False):
     task_sleep = SETTINGS["Task Sleep"]
     error_sleeping = SETTINGS["Error Sleep"]

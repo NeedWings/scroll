@@ -7,10 +7,13 @@ from multiprocessing import Event
 from termcolor import colored
 import inquirer
 from inquirer.themes import load_theme_from_dict as loadth
+from loguru import logger
 from web3 import Web3
 
 from modules.utils.starter import Starter
+from modules.utils.utils import change_proxies_ip, get_random_value_int
 from modules.utils.launch import encode_secrets, decode_secrets, transform_keys, checking_license
+from modules.tasks_handlers.main_router import MainRouter
 from modules.utils.account import Account, ethAccount
 from modules.config import autosoft, subs_text, SETTINGS_PATH, SETTINGS, RPC_LIST
 
@@ -110,6 +113,8 @@ def main():
     f.close()
     with open(f"{SETTINGS_PATH}scroll-points.csv", "w") as f:
         f.write("Address;ETH;USDT;USDC;Ambient;Nuri;Aave;Rho Markets;Total")
+    with open(f"{SETTINGS_PATH}scroll.csv", "w") as f:
+        f.write("Address;SCR\n")
     with open(f"{SETTINGS_PATH}rho_points.csv", "w") as f:
         f.write("Address;Points\n")
     action = get_action()
@@ -128,7 +133,21 @@ def main():
         print(f"Soft found {counter} keys to work")
         accounts = []
         shuffle(keys)
-        if SETTINGS["useProxies"]:
+        if SETTINGS["mobileProxy"] != "":
+            mobile_proxy = "http://" + SETTINGS["mobileProxy"]
+            proxy = {
+                "http": mobile_proxy,
+                "https": mobile_proxy
+            }
+            logger.info(f"Will use mobile proxy: {mobile_proxy}")
+            for account in keys:
+                change_proxies_ip(proxy, SETTINGS["ChangeUrl"])
+                try:
+                    MainRouter(Account(account, mobile_proxy), task_number=Starter.task_numbers[action]).start()
+                except Exception as e:
+                    logger.error(f"got error: {e}")
+                sleep(get_random_value_int(SETTINGS["Thread Runner Sleep"]))
+        elif SETTINGS["useProxies"]:
             with open(f"{SETTINGS_PATH}proxies.txt", "r") as f:
                 proxies_raw = f.read().split("\n")
             proxies = {}

@@ -13,6 +13,7 @@ from modules.utils.account import Account
 from modules.utils.Logger import logger
 from modules.utils.token_stor import scr
 from modules.utils.utils import get_pair_for_address_from_file, req_post, sleeping_sync
+from modules.config import SETTINGS_PATH
 
 def override_where():
         """ overrides certifi.core.where to return actual location of cacert.pem"""
@@ -56,6 +57,8 @@ class Claimer:
             try:
                 next_action = "2ab5dbb719cdef833b891dc475986d28393ae963"
                 resp = self.session.post("https://claim.scroll.io/", data=f'["{self.account.address}"]', headers={"next-action": next_action})
+                print(resp.status_code)
+                print(resp.text)
                 data = resp.text.split("1:")[1]
                 if data == "null\n":
                     return 0, None
@@ -68,7 +71,15 @@ class Claimer:
                 sleeping_sync(self.account.address, True)
 
     def checker(self):
-        logger.info(f"[{self.account.address}] {self.check_allocation()[0]} SCR")
+        allocation = str(self.check_allocation()[0]/1e18)
+
+        logger.info(f"[{self.account.address}] {allocation} SCR")
+
+        with open(f"{SETTINGS_PATH}scroll.csv", "r") as f:
+            data = f.read()
+        data += f"{self.account.address};{allocation.replace('.',',')}\n"
+        with open(f"{SETTINGS_PATH}scroll.csv", "w") as f:
+            f.write(data)
 
     def handle(self):
         w3 = self.account.get_w3("scroll")
@@ -88,6 +99,7 @@ class Claimer:
         txn["to"] = "0xE8bE8eB940c0ca3BD19D911CD3bEBc97Bea0ED62"
 
         self.account.send_txn(txn, "scroll")
+        sleeping_sync(self.account.address)
         return
     
     def send_to_address(self):
