@@ -32,6 +32,13 @@ def get_action() -> str:
         "action",
         message=colored("Choose soft work task", 'light_yellow'),
         choices=[
+            "check SCR",
+            "claim SCR",
+            "send to subs",
+            "",
+            "",
+            "",
+            "",
             "Bridge",
             "Withdraw", 
             "Withdraw from Rhino to Scroll",

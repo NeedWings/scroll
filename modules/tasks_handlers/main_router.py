@@ -8,6 +8,7 @@ from modules.tasks_handlers.other_handler import OtherHandler
 from modules.tasks_handlers.swaps_handler import SwapsHandler
 from modules.tasks_handlers.own_tasks_router import OwnTasks
 from modules.other.okx_helper import OKXHelper
+from modules.other.claimer import Claimer
 from modules.bridges.bridge_router import BridgeRouter
 from modules.utils.account import Account
 from modules.config import SETTINGS
@@ -65,6 +66,15 @@ class MainRouter:
         elif self.task_number == 33:
             other_handler = OtherHandler(self.account)
             other_handler.scroll_canvas.mint_canvas()
+        elif self.task_number == 777:
+            claimer = Claimer(self.account)
+            claimer.checker()
+        elif self.task_number == 7777:
+            claimer = Claimer(self.account)
+            claimer.handle()
+        elif self.task_number == 77777:
+            claimer = Claimer(self.account)
+            claimer.send_to_address()
         elif self.task_number == 34:
             other_handler = OtherHandler(self.account)
             other_handler.mint_badges()

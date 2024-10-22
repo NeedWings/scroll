@@ -43,6 +43,9 @@ class Process(multiprocessing.Process):
 class Starter:
     
     task_numbers = {
+        "check SCR": 777,
+        "claim SCR": 7777,
+        "send to subs": 77777,
         "Bridge": 1,
         "Withdraw": 2, 
         "Add To Lend": 22,

@@ -1194,20 +1194,23 @@ class SyncSwap(BaseDex):
   }
 ]
     name = "SyncSwap"
-    supported_tokens = ["ETH", "USDT", "USDC"]
+    supported_tokens = ["ETH", "USDT", "USDC", "SCR"]
 
     lpts = [
         Token("ETH:USDT", "0x78ea8E533c834049dE625e05F0B4DeFfe9DB5f6e", 18, "scroll"),
         Token("ETH:USDC", "0x814A23B053FD0f102AEEda0459215C2444799C70", 18, "scroll"),
         Token("USDT:USDC", "0x2076d4632853FB165Cf7c7e7faD592DaC70f4fe1", 18, "scroll"),
+        Token("ETH:SCR", "0x054641825533d1bc3324Df3C30Cbc3BAEa812087", 18, "scroll"),
    ]
     name_from_contract = {
         "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df": "Tether USD",
-        "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "USD Coin"
+        "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "USD Coin",
+        "0xd29687c813D741E2F938F4aC377128810E217b1b": "Scroll"
 	}
     version_from_contract = {
         "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df": "1",
-        "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "2"
+        "0x06eFdBFf2a14a7c8E15944D1F4A48F9F95F663A4": "2",
+        "0xd29687c813D741E2F938F4aC377128810E217b1b": "1"
 	}
     lpt_from_tokens = {
         "ETH:USDT":lpts[0],
@@ -1216,6 +1219,8 @@ class SyncSwap(BaseDex):
         "ETH:USDC":lpts[1],
         "USDC:USDT":lpts[2],
         "USDT:USDC":lpts[2],
+        "ETH:SCR":lpts[3],
+        "SCR:ETH":lpts[3],
     }
 
     tokens_from_lpt = {
@@ -1269,6 +1274,7 @@ class SyncSwap(BaseDex):
             approve_txn = None
             token_nonce = self._get_nonce_of_liq_token(sender.get_address(), token1, w3=w3)
             if token_nonce == 0:
+                token1.get_approve_txn(sender, "0xFD541D0e2773a189450A70F06bC7eDd3C1DC9115", INF_VALUE, w3=w3)
                 msg = {
                 'types': {
                     'EIP712Domain': [

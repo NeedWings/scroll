@@ -23,7 +23,7 @@ class Ambient(BaseDex):
     SWAP_ABI = ("address", "address", "uint256", "bool", "bool", "uint128", "uint16", "uint128", "uint128", "uint8")
     ADD_LP_ABI = ("uint8", "address", "address", "uint256", "int24", "int24", "uint128", "uint128", "uint128", "uint8", "address")
     name = "Ambient"
-    supported_tokens = ["ETH", "USDT", "USDC", "WRSETH", "WSTETH"]
+    supported_tokens = ["ETH", "USDT", "USDC", "WRSETH", "WSTETH", "SCR"]
     supported_liq_tokens  = ["ETH", "USDT", "USDC", "WRSETH", "WSTETH"]
     #base_prices = {
     #    "ETH-USDC": 1.2337912104734611e-05,
