@@ -84,7 +84,7 @@ class Token():
             w3 = Web3(Web3.HTTPProvider(choice(RPC_LIST[self.net_name])))
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         allowance = self.check_allowance(spender, sender.address, w3=w3)
-        if allowance > amount:
+        if allowance >= amount:
             return
         for i in range(5):
             try:
