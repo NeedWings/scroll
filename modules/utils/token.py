@@ -34,6 +34,35 @@ class Token():
                 logger.error(f"[{address}] can't get balance of {self.symbol}: {e}")
                 sleeping_sync(address, True)
     
+    def transfer(self, sender: BaseAccount, to: str, amount: int = None, w3 = None):
+        if amount is None:
+            amount = self.balance_of(sender.address)[0]
+        if amount == 0:
+            logger.info(f"[{sender.address}] {self.symbol} Balance is 0")
+            return
+        
+        if w3:
+            w3 = w3
+        else:
+            sender.get_w3(self.net_name)
+        
+        contract = w3.eth.contract(self.contract_address, abi=ABI)
+        for i in range(5):
+            try:
+                logger.info(f"[{sender.address}] going to transfer {amount/10**self.decimals} {self.symbol} to {to}")
+                txn_data_handler = TxnDataHandler(sender, self.net_name, w3=w3)
+                txn = contract.functions.transfer(to, amount).build_transaction(
+                                    txn_data_handler.get_txn_data()
+                                )
+                
+                sender.send_txn(txn, self.net_name)
+                sleeping_sync(sender.address)
+                return None
+            except Exception as e:
+                logger.error(f"[{sender.address}] can't get transfer txn: {e}")
+                sleeping_sync(sender.address, True)
+
+    
     def get_approve_txn(self, sender: BaseAccount, spender, amount, w3 = None):
         if w3:
             w3 = w3
