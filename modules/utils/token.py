@@ -44,7 +44,7 @@ class Token():
         if w3:
             w3 = w3
         else:
-            sender.get_w3(self.net_name)
+            w3 = sender.get_w3(self.net_name)
         
         contract = w3.eth.contract(self.contract_address, abi=ABI)
         for i in range(5):

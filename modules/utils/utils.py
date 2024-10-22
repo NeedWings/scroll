@@ -32,7 +32,8 @@ def change_proxies_ip(proxies: dict, change_url: str):
             console_log.info(f'Change ip response: {response}')
         except Exception as error:
             console_log.error(f'Failed to change ip: {error}')
-        
+        if old_ip != __get_current_ip__():
+            break
         time.sleep(5)
     
     console_log.info(f'New ip address: {__get_current_ip__()}')

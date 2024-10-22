@@ -4,7 +4,9 @@
         "DecryptType" : "Password", 
         "MaxEthGwei"  : 7123,
         "slippage"    : 0.1,
-        "useProxies"  : false,
+        "useProxies"  : true,
+        "mobileProxy": "",
+        "ChangeUrl": "https://changeip.mobileproxy.space/?proxy_key=PROXY_KEY&format=json",
 
     "========== Own Tasks ==========": "",
 
