@@ -116,4 +116,4 @@ class MainRouter:
             other_handler.rho_points()
         elif self.task_number == 0:
             own_tasks_router = OwnTasks(self.account)
-            own_tasks_router.main(self)
+            own_tasks_router.main(self, SETTINGS["own tasks"], mode=SETTINGS["own tasks mode"])
